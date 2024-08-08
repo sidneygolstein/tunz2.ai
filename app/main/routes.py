@@ -134,6 +134,7 @@ def home(hr_id):
 def create_interview(hr_id):
     if request.method == 'POST':
         language = request.form['language']
+        position = request.form['position']  # New field
         #role = request.form['role']
         role = "Sales"
         subrole = request.form['subrole']
@@ -161,7 +162,7 @@ def create_interview(hr_id):
         if not situations:
             ponderations = [[1, 1, 1, 1, 1, 1]]
 
-        new_interview = Interview(hr_id=hr_id)
+        new_interview = Interview(hr_id=hr_id, name = position)
         db.session.add(new_interview)
         db.session.commit()
 

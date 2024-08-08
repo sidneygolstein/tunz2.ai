@@ -847,6 +847,15 @@ form .form-group:nth-last-child(-n+2) {
 }
 
 
+.interview-param-box input {
+    width: 60%; /* Make the text field larger */
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 0.5rem; /* Rounded corners */
+    border: 1px solid #ccc;
+    margin-top: 1rem; /* Place the text field a bit more below the text */
+}
+
 /* PROGRESS BAR */
 
 
@@ -921,3 +930,5 @@ form .form-group:nth-last-child(-n+2) {
 .smaller-font .fa-eye {
     font-size: 0.9em; /* Adjust the value to your preference */
 }
+
+

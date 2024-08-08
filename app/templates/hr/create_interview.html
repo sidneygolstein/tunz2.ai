@@ -11,11 +11,19 @@
     <form id="create-interview-form" action="{{ url_for('main.create_interview', hr_id=hr_id) }}" method="POST">
         <div class="kpi-container">
             <div class="interview-param-box">
+                <label for="position">What's the interview position?</label>
+                <input type="text" id="position" name="position" placeholder="Enter the interview position" required>
+            </div>
+        </div>
+        <div class="kpi-container">
+            <div class="interview-param-box">
                 <label for="language">Select the language:</label>
                 <div class="select">
                     <select name="language" class="form-control" required>
                         <option value="English">English</option>
                         <option value="French">French</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="Dutch">Dutch</option>
                     </select>
                 </div>
             </div>

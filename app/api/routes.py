@@ -49,6 +49,7 @@ def get_all_interviews():
                 'hr_id': interview.hr_id,
                 'status': interview.status,
                 'rules' : interview.rules,
+                'name' : interview.name,
                 'interview_parameters': [],
             }
 
