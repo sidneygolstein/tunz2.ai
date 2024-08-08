@@ -1,0 +1,923 @@
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #03005b;
+    margin: 0;
+    background-color: #f4f4f9;
+}
+
+.text-center {
+    text-align: center;
+}
+
+
+
+.select select {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-top: 10px;
+    background-color: #fff;
+}
+
+
+
+
+
+/* CHAT DESIGN */
+
+/* Chat Container */
+.chat-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f4f4f9;
+}
+
+/* Chat Input : Text Area */
+.chat-input {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.chat-input form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.chat-input textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-right: 10px;
+    resize: none; /* Prevent manual resizing */
+    overflow: hidden; /* Hide scrollbar */
+}
+
+.chat-input .icons {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.chat-input .icons i {
+    margin: 0 5px;
+    color: #999;
+    cursor: pointer;
+}
+
+.chat-input button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #03005b;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    background-color: #03005b;
+}
+
+.chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: #eee;
+    border-radius: 16px;
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+.chip .close-btn {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+
+
+/* Sidebar Left */
+.chat-sidebar-left {
+    flex: 0 0 15%;
+    background-color: #f4f4f9;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.chat-sidebar-left .search-bar {
+    margin-bottom: 20px;
+}
+
+.chat-sidebar-left input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+}
+
+.chat-sidebar-left .chat-list {
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+}
+
+.chat-sidebar-left .chat-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.chat-sidebar-left .chat-item:hover {
+    background-color: #e5ecff;
+}
+
+/* Sidebar Right */
+.chat-sidebar-right {
+    flex: 0 0 15%;
+    background-color: #f4f4f9;
+    padding: 20px;
+    border-left: 1px solid #ddd;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.chat-sidebar-right .sidebar-right-header {
+    margin-bottom: 20px;
+}
+
+.chat-sidebar-right h2 {
+    margin: 0;
+    color: #03005b;
+}
+
+.chat-sidebar-right p {
+    color: #555;
+}
+
+#timer {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    margin-top: 20px;
+    color: #03005b;
+}
+
+#timer i {
+    margin-right: 10px;
+}
+
+/* Chat Content */
+.chat-content {
+    flex: .95;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.chat-header-left h2 {
+    margin: 0;
+    color: #03005b;
+}
+
+.chat-header-left p {
+    margin: 0;
+    color: #555;
+}
+
+.chat-header-right button {
+    margin-left: 10px;
+}
+
+#chat-box {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.message {
+    max-width: 60%;
+    margin: 10px 0;
+    padding: 2px;
+    border-radius: 10px;
+}
+
+.message.assistant {
+    background-color: #f4f4f9;
+    align-self: flex-start;
+    color: #03005b;
+}
+
+.message.user {
+    background-color: #03005b;
+    color: #f4f4f9;
+    align-self: flex-end;
+}
+
+/* Chat Input */
+.chat-input {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.chat-input form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.chat-input input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.chat-input .icons {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.chat-input .icons i {
+    margin: 0 5px;
+    color: #999;
+    cursor: pointer;
+}
+
+.chat-input button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #03005b;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.chat-header-right button,
+.chat-input button[type="submit"] {
+    background-color: #03005b;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.chat-header-right button:hover,
+.chat-input button[type="submit"]:hover {
+    background-color: #050090;
+}
+
+
+
+
+
+/* INTERVIEW LINK */
+
+.interview-link {
+    display: flex;
+    align-items: center;
+}
+
+.interview-link input {
+    flex: .3;
+    padding: 10px;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.interview-link button {
+    padding: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.popup-content {
+    text-align: center;
+}
+
+.popup-content button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #03005b;;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.popup-content button:hover {
+    background-color: #050090;;
+}
+
+.pending {
+    background-color: #ffcccc;
+}
+.review-button {
+    color: red;
+}
+
+/* DASHBOARD STYLES */
+.dashboard {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1500px;
+    margin: 20px auto; /* Adds spacing above and below */
+}
+
+.dashboard h2, .dashboard h3 {
+    text-align: center;
+    color: #050090;
+}
+
+
+
+/* KPIS STYLES */
+
+.kpi-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 20px 0;
+    width: 100%;
+}
+
+
+
+.kpi {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    width: 28%;
+    margin: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.kpi h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #050090;
+}
+
+.kpi p {
+    font-size: 24px;
+    color: #03005b;
+    font-weight: bold;
+}
+
+
+/* TABLE STYLES */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+    background-color: #050090;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+td {
+    color: #050090;
+}
+
+td ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+}
+
+th.sortable:hover {
+    cursor: pointer;
+    background-color: #3e4b9e; /* Slightly darker shade for hover */
+}
+
+.scrollable-table {
+    display: block;
+    max-height: 400px; /* Adjust the height as needed */
+    overflow-y: auto;
+}
+
+th.sortable {
+    position: relative;
+    padding-right: 20px; /* Adjust spacing for the icon */
+}
+
+th.sortable::after {
+    content: '⬍';
+    position: absolute;
+    right: 8px;
+    font-size: 0.8em;
+    color: #ffffff;
+}
+
+th.sortable.asc::after {
+    content: '⬆';
+}
+
+th.sortable.desc::after {
+    content: '⬇';
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9; /* Light grey for even rows */
+}
+
+tr:hover {
+    background-color: #f1f1f1; /* Light grey for hover */
+}
+
+tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+
+
+
+
+
+.interview-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 20px; /* Gap between items */
+}
+
+
+.interview-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-size: 14px; /* Adjust text size */
+}
+
+.interview-card h4 {
+    font-size: 16px; /* Slightly larger for headers */
+}
+
+.interview-card table {
+    width: 100%;
+}
+
+.interview-card th, .interview-card td {
+    padding: 8px;
+}
+
+.interview-details .interview-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.interview-details ul {
+    list-style: none;
+    padding: 0;
+}
+
+.interview-details li {
+    margin: 5px 0;
+}
+
+
+/* INTERVIEW LINK STYLES */
+
+
+
+.interview-link {
+    margin: 20px 0;
+}
+
+.interview-link input {
+    width: 60%;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.interview-link button {
+    padding: 10px 20px;
+}
+
+
+
+
+/* BACK HOME BUTTON STYLES */
+
+.back-home .btn {
+    padding: 10px 20px;
+    background-color: #03005b;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.back-home .btn:hover {
+    background-color: #0056b3;
+}
+
+/* FLASH STYLES */
+
+.notification {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff;
+    color: #03005b;
+    padding: 15px;
+    border-radius: 5px;
+    z-index: 1000;
+    opacity: 1;
+}
+
+.notification p {
+    margin: 0;
+}
+
+.notification .success {
+    background-color: green;
+}
+
+.notification .error {
+    background-color: red;
+}
+
+.flashes {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: auto;
+    z-index: 1000;
+}
+
+.flash-success {
+    background-color: #d4edda;
+    color: #03005b;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+}
+
+.flash-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+}
+
+.main-content {
+    padding: 20px;
+}
+
+.no-sidebar .main-content {
+    margin-left: 0;
+    width: 100%;
+}
+
+
+.main-content {
+    margin-left: 220px; /* Same width as the sidebar + some space */
+    width: calc(100% - 220px);
+}
+
+/* Modal styling */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+    padding-top: 60px; 
+}
+
+/* CONFIRM BOX STYLES */
+
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    text-align: center;
+}
+
+#confirm-yes, #confirm-no {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#confirm-yes {
+    background-color: #ddd8ff;
+    color: rgb(0, 0, 0);
+}
+
+#confirm-no {
+    background-color: rgb(255, 167, 167);
+    color: white;
+}
+
+/* SIDEBAR STYLES */
+
+.sidebar {
+    height: 100%;
+    width: 150px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #050090;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensure items are spaced between top and bottom */
+}
+
+.sidebar h2 {
+    color: rgb(255, 255, 255);
+    text-align: center; /* Align text to the left */
+    margin-bottom: 20px; /* Add space below the heading */
+}
+
+.sidebar ul {
+    padding-left: 0;
+}
+
+.sidebar-top {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px; /* Add margin to push the top elements lower */
+
+}
+
+.sidebar a {
+    text-decoration: none;
+    font-size: 18px;
+    color: rgb(255, 255, 255);
+    display: block;
+    padding: 10px 15px; /* Add padding to the left */
+    text-align: left; /* Align text to the left */
+}
+
+.sidebar a.logout {
+    margin-top: auto; /* Pushes the logout link to the bottom */
+    padding: 10px 15px; /* Ensure the logout link also has padding */
+    margin-bottom: 30px; /* Add margin to ensure it's not too low */
+}
+
+.sidebar a:hover {
+    background-color: #d7d1ff;
+    width: 80%; /* Ensure the hover effect spans the entire width */
+}
+
+
+/* CREATE INTERVIEW SCREEN */
+.situations-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 20px; /* Gap between columns */
+}
+
+.selected-situations ul {
+    list-style-type: none; /* Remove list style */
+    padding-left: 0; /* Remove padding */
+    margin: 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f4f4f9;
+}
+
+.selected-situations li {
+    display: flex;
+    justify-content: space-between; /* Justify content to left and right */
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.selected-situations li:last-child {
+    border-bottom: none; /* Remove border from last item */
+}
+
+.selected-situations .remove-btn {
+    color: red;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 1.2em;
+}
+
+form {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+form .form-group:nth-last-child(-n+2) {
+    grid-column: span 3;
+}
+
+.create-interview-btn {
+    background-color: #050090;
+    color: #ffffff;
+    padding: 15px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    margin: 20px 0;
+    width: 20%;
+    text-align: center;
+}
+
+.create-interview-btn:hover {
+    background-color: #03005b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.create-button-container {
+    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    grid-column: span 3; /* Ensure it spans full width of form */
+}
+
+/* INTERVIEW DETAILS STYLES */
+
+
+.interview-param-box {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    width: 70%;
+    margin: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.interview-param-box-big {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    width: 85%;
+    margin: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+/* PROGRESS BAR */
+
+
+.progress {
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.progress-bar {
+    height: 100%;
+    text-align: center;
+    color: white;
+    white-space: nowrap;
+    transition: width 0.6s ease;
+}
+
+.hidden-mean-score {
+    display: none;
+}
+
+
+
+/* COMPARISON BUTTON IN HR HOMEPAGE */
+
+.comparison-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #050090; /* Change this color to your preferred button color */
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.comparison-button i {
+    margin-right: 10px;
+}
+
+.comparison-button:hover {
+    background-color: #0056b3; /* Change this color for the hover effect */
+}
+
+
+
+/* SMALLER FONT CLASS */
+.smaller-font {
+    font-size: 0.9em; /* Adjust the value to your preference */
+}
+
+.smaller-font h3 {
+    font-size: 1.1em; /* Adjust the value to your preference */
+}
+
+.smaller-font table th,
+.smaller-font table td {
+    font-size: 0.9em; /* Adjust the value to your preference */
+}
+
+.smaller-font .progress-bar {
+    font-size: 0.8em; /* Adjust the value to your preference */
+}
+
+.smaller-font .fa-eye {
+    font-size: 0.9em; /* Adjust the value to your preference */
+}

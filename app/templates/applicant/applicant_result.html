@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interview Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/styles.css') }}">
+</head>
+<body>
+    <div class="result-container">
+        <h2>Interview Result</h2>
+        <p>Thank you, {{applicant_name}} {{applicant_surname}}, for joining the interview. We will keep you in touch very soon. Here is your interview feedback .</p>
+        <p> {{applicant_feedback}} </p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,237 @@
+{% extends 'base_hr_authenticated.html' %}
+{% block title %}Create Interview{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='static/styles.css') }}">
+<script src="{{ url_for('static', filename='static/js/confirmation.js') }}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<div class="container">
+    <h1>Design Your Interview</h1>
+    <form id="create-interview-form" action="{{ url_for('main.create_interview', hr_id=hr_id) }}" method="POST">
+        <div class="kpi-container">
+            <div class="interview-param-box">
+                <label for="language">Select the language:</label>
+                <div class="select">
+                    <select name="language" class="form-control" required>
+                        <option value="English">English</option>
+                        <option value="French">French</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="kpi-container">
+            <div class="interview-param-box">
+                <label for="duration">Set the interview duration:</label>
+                <div class="select">
+                    <select name="duration" class="form-control" required>
+                        <option value="1">1 minute</option>
+                        <option value="2">2 minutes</option>
+                        <option value="5">5 minutes</option>
+                        <option value="10">10 minutes</option>
+                        <option value="15">15 minutes</option>
+                        <option value="30">30 minutes</option>
+                        <option value="45">45 minutes</option>
+                        <option value="60">60 minutes</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="kpi-container">
+            <div class="interview-param-box">
+                <label for="subrole">Choose a Sales Role:</label>
+                <div class="select">
+                    <select name="subrole" class="form-control" id="subrole-select" required>
+                        <option value="Business Development">Business Development</option>
+                        <option value="Sales Development">Sales Development</option>
+                        <option value="Account Management">Account Management</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="kpi-container" style="grid-column: span 2;">
+            <div class="interview-param-box-big">
+                <div class="situations-container">
+                    <div class="select-situation">
+                        <label for="situations">Select one or multiple situation(s):</label>
+                        <div class="select">
+                            <select id="situations-select" class="form-control">
+                                <option value="" disabled selected>Select a situation</option>
+                                <!-- Options will be populated dynamically based on the selected role -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="selected-situations">
+                        <label>Selected Situations:</label>
+                        <ul id="selected-situations">
+                            <!-- Selected situations will be shown here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="kpi-container">
+            <div class="interview-param-box">
+                <label for="industry">Choose an Industry:</label>
+                <div class="select">
+                    <select name="industry" class="form-control" required>
+                        <option value="Blockchain/Web3">Blockchain/Web3</option>
+                        <option value="FinTech">FinTech</option>
+                        <option value="HR Tech">HR Tech</option>
+                        <option value="Consulting">Consulting</option>
+                        <option value="Banking & Finance">Banking & Finance</option>
+                        <option value="e-Commerce">e-Commerce</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Retail">Retail</option>
+                        <option value="EdTech">EdTech</option>
+                        <option value="Cybersecurity">Cybersecurity</option>
+                        <option value="Real Estate">Real Estate</option>
+                        <option value="Gaming">Gaming</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!-- Criteria Ponderation Section -->
+        <div class="criteria-container">
+            <h3>Set Criteria Importance</h3>
+            <div class="criteria-list">
+                <div class="criteria-item">
+                    <label>Communication Skills:</label>
+                    <input type="number" name="ponderation_1" min="1" max="5" value="3" required>
+                </div>
+                <div class="criteria-item">
+                    <label>Logical Reasoning & Structure and Problem Solving:</label>
+                    <input type="number" name="ponderation_2" min="1" max="5" value="3" required>
+                </div>
+                <div class="criteria-item">
+                    <label>Creativity:</label>
+                    <input type="number" name="ponderation_3" min="1" max="5" value="3" required>
+                </div>
+                <div class="criteria-item">
+                    <label>Business Acumen:</label>
+                    <input type="number" name="ponderation_4" min="1" max="5" value="3" required>
+                </div>
+                <div class="criteria-item">
+                    <label>Analytical Skills:</label>
+                    <input type="number" name="ponderation_5" min="1" max="5" value="3" required>
+                </div>
+                <div class="criteria-item">
+                    <label>Project Management and Prioritization:</label>
+                    <input type="number" name="ponderation_6" min="1" max="5" value="3" required>
+                </div>
+            </div>
+        </div>
+        <div class="create-button-container">
+            <button type="submit" class="btn btn-primary create-interview-btn" data-action="create-itw">Create Interview</button>
+        </div>
+        </form>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+        <p id="confirmation-message">Are you sure you want to create this interview?</p>
+        <button id="confirm-yes">Yes</button>
+        <button id="confirm-no">No</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const subRoleSelect = document.getElementById("subrole-select");
+        const situationsSelect = document.getElementById("situations-select");
+        const selectedSituationsList = document.getElementById("selected-situations");
+        const interviewSituations = {{ interview_situations | tojson }};
+
+        // Elements for ponderation
+        const ponderationInputs = [
+            document.querySelector('input[name="ponderation_1"]'),
+            document.querySelector('input[name="ponderation_2"]'),
+            document.querySelector('input[name="ponderation_3"]'),
+            document.querySelector('input[name="ponderation_4"]'),
+            document.querySelector('input[name="ponderation_5"]'),
+            document.querySelector('input[name="ponderation_6"]')
+        ];
+
+        function populateSituations(subrole) {
+            situationsSelect.innerHTML = '<option value="" disabled selected>Select a situation</option>';
+            const salesSituations = interviewSituations["Sales"];
+            if (subrole in salesSituations) {
+                const subroleSituations = salesSituations[subrole];
+                for (const situation in subroleSituations) {
+                    const option = document.createElement("option");
+                    option.value = situation;
+                    option.text = situation;
+                    situationsSelect.add(option);
+                }
+            }
+        }
+
+        function addSelectedSituation(situation) {
+            const li = document.createElement("li");
+            li.textContent = situation;
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "situations";
+            input.value = situation;
+            li.appendChild(input);
+            const removeButton = document.createElement("i");
+            removeButton.classList.add("fas", "fa-times", "remove-btn");
+            removeButton.addEventListener("click", () => {
+                selectedSituationsList.removeChild(li);
+                const option = document.createElement("option");
+                option.value = situation;
+                option.text = situation;
+                situationsSelect.add(option);
+                resetPonderation();
+            });
+            li.appendChild(removeButton);
+            selectedSituationsList.appendChild(li);
+
+            // Update ponderation based on the selected situation
+            updatePonderation(situation);
+        }
+
+        function updatePonderation(situation) {
+            const role = "Sales";
+            const subrole = subRoleSelect.value;
+            const defaultPonderation = interviewSituations[role][subrole][situation] || [3, 3, 3, 3, 3, 3];
+            ponderationInputs.forEach((input, index) => {
+                input.value = defaultPonderation[index];
+            });
+        }
+
+        function resetPonderation() {
+            ponderationInputs.forEach(input => {
+                input.value = 3;
+            });
+        }
+
+        subRoleSelect.addEventListener("change", function() {
+            populateSituations(subRoleSelect.value);
+            selectedSituationsList.innerHTML = ""; // Clear the selected situations when the role changes
+            resetPonderation();
+        });
+
+        situationsSelect.addEventListener("change", function() {
+            const selectedOption = situationsSelect.options[situationsSelect.selectedIndex];
+            if (selectedOption.value !== "") {
+                addSelectedSituation(selectedOption.value);
+                situationsSelect.remove(situationsSelect.selectedIndex); // Remove the selected option from the dropdown
+
+                // Reset the dropdown to show "Select a situation" without adding it as a new option
+                situationsSelect.selectedIndex = 0;
+            }
+        });
+
+        populateSituations(subRoleSelect.value);
+    });
+</script>
+
+
+
+
+
+{% endblock %}
