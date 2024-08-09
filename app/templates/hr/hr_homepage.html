@@ -34,6 +34,7 @@
                 <thead>
                     <tr>
                         <th class="sortable">Created At</td>
+                        <th> Position </td>
                         <th class="sortable">Industry</td>
                         <th>Sales Role</th>
                         <th>Situation(s)</th>
@@ -47,6 +48,7 @@
                     {% for interview in interview_data %}
                     <tr>
                         <td>{{ interview.created_at.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ interview.interview_name }}</td>
                         <td>{{ interview.industry }}</td>
                         <td>{{ interview.subrole }}</td>
                         <td>
@@ -79,7 +81,7 @@
                     {% if interview.sessions_count > 0 %}
                         <div class="interview-card">
                             <div class="interview-header">
-                                <h4> Sales interview for the {{interview.subrole}} position in the {{interview.industry}} industry</h4>
+                                <h4> {{interview.interview_name}} position in the {{interview.industry}} industry</h4>
                             </div>
                             <div class="scrollable-table">
                                 <table id="interview-details-table-{{ interview.interview_parameter_id }}">

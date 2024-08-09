@@ -101,11 +101,12 @@ def home(hr_id):
                 'start_time': session.start_time,
                 'score': criteria_scores,
                 'mean_score': mean_score,
-                'id': session.id
+                'id': session.id,
             })
             total_applicants_set.add(applicant.email_address)
         interview_data.append({
             'created_at': interview_parameters.start_time,
+            'interview_name' : interview.name,
             'industry': interview_parameters.industry,
             'role': interview_parameters.role,            
             'subrole': interview_parameters.subrole,
@@ -207,6 +208,7 @@ def session_details(hr_id, session_id):
     questions = Question.query.filter_by(session_id=session_id).all()
     result = Result.query.filter_by(session_id=session_id).first()
     interview_parameter = InterviewParameter.query.get(session.interview_parameter_id)
+    interview = Interview.query.get(interview_parameter.interview_id)
 
     conversation = get_interview_conversation(session_id)
     # Load criteria scores from the JSON string
@@ -258,13 +260,16 @@ def session_details(hr_id, session_id):
                            conversation=conversation,
                            result=result,
                            interview_parameter=interview_parameter,
-                           score_interview = score_interview)
+                           interview = interview,
+                           score_interview = score_interview,)
 
 
 
 @main.route('/comparison_details/<int:hr_id>/<int:interview_id>', methods=['GET'])
 def comparison_details(hr_id, interview_id):
     hr = HR.query.get_or_404(hr_id)
+    interview = Interview.query.get_or_404(interview_id)
+    interview_name = interview.name
     interview_parameters = InterviewParameter.query.filter_by(interview_id=interview_id).first()
     sessions = Session.query.filter_by(interview_parameter_id=interview_parameters.id).all()
     comparison_data = []
@@ -283,12 +288,14 @@ def comparison_details(hr_id, interview_id):
                     'criteria_scores': criteria_score,
                     'mean_score': mean_score,
                     'id': session.id  # Add session id here
+                
                 })
 
     return render_template('hr/comparison_details.html',
                            hr=hr,
                            hr_id=hr_id,
                            interview_parameters=interview_parameters,
+                           interview_name = interview_name,
                            comparison_data=comparison_data,
                            get_color=get_color)
 
@@ -301,6 +308,7 @@ def applicant_home(hr_id, interview_parameter_id):
     hr = HR.query.get_or_404(hr_id)
     interview_parameter = InterviewParameter.query.get_or_404(interview_parameter_id)
     interview_id = interview_parameter.interview_id
+    interview = Interview.query.get_or_404(interview_id)
     duration = interview_parameter.duration
     company = Company.query.get_or_404(hr.company_id)
     company_name = company.name
@@ -319,7 +327,8 @@ def applicant_home(hr_id, interview_parameter_id):
 
     return render_template(
         'applicant/applicant_home.html', 
-        interview_parameter_id=interview_parameter_id, 
+        interview_parameter_id=interview_parameter_id,
+        interview = interview, 
         hr_id = hr_id,
         role=interview_parameter.role,
         subrole = interview_parameter.subrole, 
@@ -387,6 +396,7 @@ def chat(hr_id, interview_id, interview_parameter_id, session_id, applicant_id):
     company = Company.query.get_or_404(hr.company_id)
 
     interview_parameter = InterviewParameter.query.get_or_404(interview_parameter_id)
+    interview = Interview.query.get_or_404(interview_id)
     current_session = Session.query.get_or_404(session_id)
     applicant = Applicant.query.get_or_404(applicant_id)
     questions = Question.query.filter_by(session_id=session_id).all()
@@ -464,6 +474,7 @@ def chat(hr_id, interview_id, interview_parameter_id, session_id, applicant_id):
 
     return render_template('applicant/chat.html',
                            interview_parameter = interview_parameter,
+                           interview = interview,
                            company = company,
                            hr =hr,
                            questions=questions,

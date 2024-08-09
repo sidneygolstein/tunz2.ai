@@ -45,11 +45,12 @@
     .radar-container {
         display: flex;
         justify-content: space-between;
-        margin-top: 20px;
+        margin-top: 15px;
+        margin-bottom: 15px;
     }
     .radar-chart-box, .criteria-explanations-box {
         background-color: #fff;
-        padding: 20px;
+        padding: 15px;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
@@ -102,7 +103,7 @@
         padding-left: 20px;
     }
     .title-container {
-        margin-top: 20px;
+        margin-top: 10px;
     }
     .title-container h3 {
         margin-bottom: 0;
@@ -110,38 +111,50 @@
 </style>
 
 <div class="container">
-    <h2>Sale interview for the {{interview_parameter.subrole}} position in the {{interview_parameter.industry}} industry</h2>
+    <h2>{{interview.name}} position in the {{interview_parameter.industry}} industry</h2>
     <div class="info-columns">
         <div class="info-item">
-            <p><strong>Applicant Name:</strong> {{ applicant.name }}</p>
+            <p><strong>Name & Surname:</strong> {{ applicant.name }} {{ applicant.surname }}</p>
         </div>
         <div class="info-item">
-            <p><strong>Applicant Surname:</strong> {{ applicant.surname }}</p>
+            <p><strong>Interview Duration:</strong> {{ interview_parameter.duration }} minutes(s)</p>
         </div>
         <div class="info-item">
-            <p><strong>Applicant Email:</strong> {{ applicant.email_address }}</p>
-        </div>
-    </div>
-    <div class="info-columns">
-        <div class="info-item">
-            <p><strong>Duration:</strong> {{ interview_parameter.duration }} minutes</p>
-        </div>
-        <div class="info-item">
-            <p><strong>Start Time:</strong> {{ session.start_time.strftime('%d-%m-%Y at %H:%M') }}</p>
-        </div>
-        <div class="info-item">
-            <p><strong>Situation</strong> 
+            <p><strong>Situation(s) Chosen for the Interview</strong> 
                     {% for situation in interview_parameter.get_situations() %}
                     {{ situation }}
                     {% endfor %}
             </p>
         </div>
     </div>
+    <div class="info-columns">
+        <div class="info-item">
+            <p><strong>Email:</strong> {{ applicant.email_address }}</p>
+        </div>
+        <div class="info-item">
+            <p><strong>Start Time:</strong> {{ session.start_time.strftime('%d-%m-%Y at %H:%M') }}</p>
+        </div>
+        <div class="info-item">
+            <p><strong>Industry:</strong> {{ interview_parameter.industry }} </p>
+        </div>
+    </div>
     
+    <div class="title-container">
+        <div class="conversation-box">
+            <h3>Overall Appreciation</h3>
+            <div style="display: flex; align-items: center;">
+                <span class="stars">
+                    <strong>{{ score_interview.overall_assessment }}</strong> 
+                </span>
+                <p style="margin-left: 20px;">{{ score_interview.overall_assessment_reason }}</p>
+            </div>
+        </div>
+    </div>
+
     <div class="title-container">
         <div class="radar-container">
             <div class="radar-chart-box">
-                <h3>Assessment</h3>
+                <h3>Detailed Assessment</h3>
                 <canvas id="radarChart" style="max-height: 400px;"></canvas> <!-- Adjusted height -->
             </div>
             <div class="criteria-explanations-box">
@@ -196,7 +209,7 @@
     </div>
 
     <div class="title-container">
-        <h3>Criteria used to score the interview and their relative importance:</h3>
+        <h3>Criteria used to score the interview with their relative importance:</h3>
         <div class="title-box">
             <ul class="criteria-grid">
                 {% for criteria, importance in criteria_importance %}
@@ -206,7 +219,11 @@
         </div>
     </div>
 
-    <a href="{{ url_for('main.home', hr_id=hr_id) }}">Back to Dashboard</a>
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{  url_for('main.home', hr_id=hr_id) }}" class="comparison-button">
+            Back to your Dashboard
+        </a>
+    </div>
 </div>
 
 <script>
