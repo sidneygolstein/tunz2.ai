@@ -828,6 +828,7 @@ form .form-group:nth-last-child(-n+2) {
     padding: 20px;
     text-align: center;
     width: 70%;
+    height: auto;
     margin: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -935,3 +936,91 @@ form .form-group:nth-last-child(-n+2) {
 
 
 
+
+
+
+
+/* Style for the .kpi-container and .criteria-container */
+.kpi-container, .criteria-container {
+    width: 100%; /* Ensure full width within the container */
+    margin-bottom: 20px; /* Space between each container */
+}
+
+/* Style for the interview-param-box to ensure consistent sizing */
+.interview-param-box {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%; /* Ensure the box takes the full width of the container */
+    box-sizing: border-box;
+}
+
+/* Style for the criteria list within the criteria-container */
+.criteria-container .criteria-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between each criteria item */
+    width: 100%;
+}
+
+.criteria-container label {
+    display: block;
+    margin-bottom: 15px; /* Add space between the title and first criteria label */
+}
+
+.slider-container {
+    margin-top: 10px;
+}
+
+.slider-container .slider {
+    width: 100%;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #4f4f4f;
+}
+
+
+/* Style for the info icon */
+.info-icon {
+    font-size: 16px; /* Adjust the size of the info icon */
+    margin-left: 8px; /* Space between the label and the icon */
+    cursor: pointer; /* Indicate that this is interactive */
+    vertical-align: middle; /* Align the icon with the text */
+    position: relative; /* Position relative to ensure the tooltip is aligned properly */
+}
+
+/* Tooltip style */
+.info-icon:hover::after {
+    content: attr(data-tooltip); /* Display the tooltip text from data-tooltip attribute */
+    position: absolute; /* Position it absolutely relative to the icon */
+    background-color: #333; /* Background color of the tooltip */
+    color: #fff; /* Text color of the tooltip */
+    padding: 8px 12px; /* Padding around the text inside the tooltip */
+    border-radius: 5px; /* Rounded corners of the tooltip */
+    white-space: normal; /* Allow the text to wrap to a new line if it exceeds max-width */
+    max-width: 250px; /* Control the maximum width of the tooltip */
+    z-index: 10; /* Ensure the tooltip appears above other elements */
+    font-size: 12px; /* Font size of the tooltip text */
+    line-height: 1.5; /* Line height of the tooltip text */
+    left: 50%; /* Position the tooltip horizontally centered relative to the icon */
+    transform: translateX(-50%); /* Shift the tooltip left by 50% of its width to center it */
+    bottom: 125%; /* Position the tooltip above the icon with some space */
+}
+
+/* Tooltip arrow */
+.info-icon:hover::before {
+    content: ''; /* Creates an empty element to serve as the tooltip arrow */
+    position: absolute; /* Position it absolutely relative to the icon */
+    border-width: 5px; /* Size of the arrow */
+    border-style: solid; /* Solid lines for the arrow */
+    border-color: #333 transparent transparent transparent; /* Arrow color (triangle pointing down) */
+    left: 50%; /* Position the arrow horizontally centered relative to the icon */
+    transform: translateX(-50%); /* Shift the arrow left by 50% of its width to center it */
+    bottom: 115%; /* Position the arrow just below the tooltip */
+}

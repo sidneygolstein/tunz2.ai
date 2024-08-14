@@ -22,7 +22,7 @@
             "Team leadership": [5, 4, 3, 3, 2, 4]
         },
         "Sales Development": {
-            "Negociation with clients": [5, 3, 4, 4, 1, 3],
+            "Negotiation with clients": [5, 3, 4, 4, 1, 3],
             "Relationship building with clients": [5, 2, 3, 3, 1, 2],
             "Performance metrics & measuring success": [4, 4, 2, 3, 4, 3],
             "Sales pitching": [5, 4, 3, 4, 1, 3],
@@ -39,7 +39,7 @@
             "Team leadership": [4, 5, 3, 3, 2, 4]
         },
         "Account Management": {
-            "Negociation with clients": [5, 3, 4, 4, 1, 3],
+            "Negotiation with clients": [5, 3, 4, 4, 1, 3],
             "Relationship building with clients": [5, 2, 3, 3, 1, 2],
             "Performance metrics & measuring success": [3, 4, 2, 3, 5, 3],
             "Sales pitching": [5, 4, 3, 4, 1, 3],

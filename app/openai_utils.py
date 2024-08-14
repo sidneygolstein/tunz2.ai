@@ -202,10 +202,10 @@ def create_scoring_thread(language, role, subrole, industry, situation, conversa
                 - For the overall_assessment key, the value is a string assessing the overall score of the interview. The overall score vaue is the mean of the criteria_score keys. 
                     - If the mean score is between 0 and 1, the overall_assesment value must be 'Very Poor'
                     - If the mean score is between 1 and 2, the overall_assesment value must be 'Poor'
-                    - If the mean score is between 2 and 3, the overall_assesment value must be 'Very Weak'
-                    - If the mean score is between 3 and 4, the overall_assesment value must be 'Weak'
+                    - If the mean score is between 2 and 3, the overall_assesment value must be 'Weak'
+                    - If the mean score is between 3 and 4, the overall_assesment value must be 'Insufficient'
                     - If the mean score is between 4 and 5, the overall_assesment value must be 'Below Average'
-                    - If the mean score is between 5 and 6, the overall_assesment value must be 'Fair'
+                    - If the mean score is between 5 and 6, the overall_assesment value must be 'Average'
                     - If the mean score is between 6 and 7, the overall_assesment value must be 'Good'
                     - If the mean score is between 7 and 8, the overall_assesment value must be 'Very Good'
                     - If the mean score is between 8 and 9, the overall_assesment value must be 'Excellent'

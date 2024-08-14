@@ -17,11 +17,11 @@
                 <p>{{ total_interviews }}</p>
             </div>
             <div class="kpi">
-                <h4>Total Interviews Conducted</h4>
+                <h4>Total Number of Sessions</h4>
                 <p>{{ total_sessions }}</p>
             </div>
             <div class="kpi">
-                <h4>Total Applicants</h4>
+                <h4>Total Number of Applicants</h4>
                 <p>{{ total_applicants }}</p>
             </div>
         </div>
@@ -34,10 +34,10 @@
                 <thead>
                     <tr>
                         <th class="sortable">Created At</td>
-                        <th> Position </td>
+                        <th> Job Title </td>
                         <th class="sortable">Industry</td>
-                        <th>Sales Role</th>
-                        <th>Situation(s)</th>
+                        <th>Type of Role</th>
+                        <th>Interview Scenario</th>
                         <th class="sortable"> Language</td>
                         <th>Duration</th>
                         <th class="sortable">Number of Sessions</td>
@@ -61,7 +61,11 @@
                         <td>{{ interview.language }}</td>
                         <td>{{ interview.duration }} min</td>
                         <td align="center">{{ interview.sessions_count }}</td>
-                        <td><a href="{{ url_for('main.applicant_home', hr_id = hr_id, interview_parameter_id=interview.interview_parameter_id) }}" target="_blank">Link</a></td>
+                        <td>
+                            <button class="copy-link-btn" data-link="{{ url_for('main.applicant_home', hr_id = hr_id, interview_parameter_id=interview.interview_parameter_id, _external=True) }}">
+                                <i class="fas fa-link"></i>
+                            </button>                        
+                        </td>                    
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -90,7 +94,7 @@
                                             <th class="sortable">Name</th>
                                             <th class="sortable">Surname</th>
                                             <th class="sortable">Email</th>
-                                            <th class="sortable">Interview Start Time</th>
+                                            <th class="sortable">Start Time</th>
                                             <th class="sortable" onclick="sortTableByMeanScore('{{ interview.interview_parameter_id }}')">Overall Assessment</th>
                                             <th> </th>
                                         </tr>
@@ -125,7 +129,7 @@
                             <!-- Centered Button -->
                             <div style="text-align: center; margin-top: 20px;">
                                 <a href="{{ url_for('main.comparison_details', hr_id=hr_id, interview_id = interview.interview_id) }}" class="comparison-button">
-                                    <i class="fas fa-eye"></i> Detailed comparisons
+                                    <i class="fas fa-eye"></i> Detailed comparison
                                 </a>
                             </div>
                         </div>
@@ -157,5 +161,23 @@
             // Update the sort order data attribute
             table.dataset.sortOrder = ascending ? 'asc' : 'desc';
         }
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const copyButtons = document.querySelectorAll('.copy-link-btn');
+        
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const link = this.getAttribute('data-link');
+                    navigator.clipboard.writeText(link).then(() => {
+                        alert('Link copied to clipboard!');
+                    }).catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+                });
+            });
+        });
+        
     </script>
+    
 {% endblock %}
