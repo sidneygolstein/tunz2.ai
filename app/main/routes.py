@@ -140,8 +140,18 @@ def create_interview(hr_id):
         role = "Sales"
         subrole = request.form['subrole']
         industry = request.form['industry']
+
+        if industry == "Other":
+            industry = request.form.get('other_industry', '').strip()
+            if not industry:
+                flash('Please specify the industry if "Other" is selected.', 'danger')
+                return redirect(url_for('main.create_interview', hr_id=hr_id))
+
+
         duration = int(request.form['duration'])
         situations = request.form.getlist('situations')
+
+
 
         # Load the JSON file to get the ponderation
         json_path = os.path.join(current_app.root_path, 'interview_situations_v3.json')
