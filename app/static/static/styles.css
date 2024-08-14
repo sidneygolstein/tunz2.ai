@@ -1024,3 +1024,25 @@ form .form-group:nth-last-child(-n+2) {
     transform: translateX(-50%); /* Shift the arrow left by 50% of its width to center it */
     bottom: 115%; /* Position the arrow just below the tooltip */
 }
+
+
+
+
+
+
+
+
+.star-rating {
+    display: inline-block;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.star {
+    color: #ddd; /* Unselected color */
+    transition: color 0.2s;
+}
+
+.star.selected {
+    color: gold; /* Selected color */
+}

@@ -124,81 +124,69 @@
                 <div class="criteria-list">
                     <div class="criteria-item">
                         <label>Communication Skills:</label>
-                        <div class="slider-container">
-                            <input type="range" name="ponderation_1" min="1" max="5" value="3" class="slider" id="ponderation_1">
-                            <div class="slider-labels">
-                                <span>Not important</span>
-                                <span>Slightly important</span>
-                                <span>Moderately important</span>
-                                <span>Important</span>
-                                <span>Very important</span>
-                            </div>
+                        <div class="star-rating" data-rating="3">
+                            <span class="star" data-value="1">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="5">&#9733;</span>
                         </div>
+                        <input type="hidden" name="ponderation_1" value="3">
                     </div>
                     <div class="criteria-item">
                         <label>Logical Reasoning & Structure and Problem Solving:</label>
-                        <div class="slider-container">
-                            <input type="range" name="ponderation_2" min="1" max="5" value="3" class="slider" id="ponderation_2">
-                            <div class="slider-labels">
-                                <span>Not important</span>
-                                <span>Slightly important</span>
-                                <span>Moderately important</span>
-                                <span>Important</span>
-                                <span>Very important</span>
-                            </div>
+                        <div class="star-rating" data-rating="3">
+                            <span class="star" data-value="1">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="5">&#9733;</span>
                         </div>
+                        <input type="hidden" name="ponderation_2" value="3">
                     </div>
                     <div class="criteria-item">
                         <label>Creativity:</label>
-                        <div class="slider-container">
-                            <input type="range" name="ponderation_3" min="1" max="5" value="3" class="slider" id="ponderation_3">
-                            <div class="slider-labels">
-                                <span>Not important</span>
-                                <span>Slightly important</span>
-                                <span>Moderately important</span>
-                                <span>Important</span>
-                                <span>Very important</span>
-                            </div>
+                        <div class="star-rating" data-rating="3">
+                            <span class="star" data-value="1">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="5">&#9733;</span>
                         </div>
+                        <input type="hidden" name="ponderation_3" value="3">
                     </div>
                     <div class="criteria-item">
                         <label>Business Acumen:</label>
-                        <div class="slider-container">
-                            <input type="range" name="ponderation_4" min="1" max="5" value="3" class="slider" id="ponderation_4">
-                            <div class="slider-labels">
-                                <span>Not important</span>
-                                <span>Slightly important</span>
-                                <span>Moderately important</span>
-                                <span>Important</span>
-                                <span>Very important</span>
-                            </div>
+                        <div class="star-rating" data-rating="3">
+                            <span class="star" data-value="1">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="5">&#9733;</span>
                         </div>
+                        <input type="hidden" name="ponderation_4" value="3">
                     </div>
                     <div class="criteria-item">
                         <label>Analytical Skills:</label>
-                        <div class="slider-container">
-                            <input type="range" name="ponderation_5" min="1" max="5" value="3" class="slider" id="ponderation_5">
-                            <div class="slider-labels">
-                                <span>Not important</span>
-                                <span>Slightly important</span>
-                                <span>Moderately important</span>
-                                <span>Important</span>
-                                <span>Very important</span>
-                            </div>
+                        <div class="star-rating" data-rating="3">
+                            <span class="star" data-value="1">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="5">&#9733;</span>
                         </div>
+                        <input type="hidden" name="ponderation_5" value="3">
                     </div>
                     <div class="criteria-item">
-                        <label>Project Management and Prioritization:</label>
-                        <div class="slider-container">
-                            <input type="range" name="ponderation_6" min="1" max="5" value="3" class="slider" id="ponderation_6">
-                            <div class="slider-labels">
-                                <span>Not important</span>
-                                <span>Slightly important</span>
-                                <span>Moderately important</span>
-                                <span>Important</span>
-                                <span>Very important</span>
-                            </div>
+                        <label>Project Management & Priorization:</label>
+                        <div class="star-rating" data-rating="3">
+                            <span class="star" data-value="1">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="5">&#9733;</span>
                         </div>
+                        <input type="hidden" name="ponderation_6" value="3">
                     </div>
                 </div>
             </div>
@@ -233,6 +221,8 @@
     </div>
 </div>
 
+<!-- Javascript code -->
+ 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const subRoleSelect = document.getElementById("subrole-select");
@@ -240,7 +230,7 @@
         const selectedSituationsList = document.getElementById("selected-situations");
         const interviewSituations = {{ interview_situations | tojson }};
 
-        // Elements for ponderation
+        // Elements for ponderation (inputs and star ratings)
         const ponderationInputs = [
             document.querySelector('input[name="ponderation_1"]'),
             document.querySelector('input[name="ponderation_2"]'),
@@ -249,6 +239,53 @@
             document.querySelector('input[name="ponderation_5"]'),
             document.querySelector('input[name="ponderation_6"]')
         ];
+
+        const starRatings = document.querySelectorAll(".star-rating");
+
+        // Function to fill stars based on the rating
+        function fillStars(starRating, rating) {
+            const stars = starRating.querySelectorAll(".star");
+            stars.forEach(star => {
+                if (parseInt(star.dataset.value) <= rating) {
+                    star.classList.add("selected");
+                } else {
+                    star.classList.remove("selected");
+                }
+            });
+            starRating.dataset.rating = rating;
+            starRating.nextElementSibling.value = rating;
+        }
+
+        // Initialize stars to 3 stars by default on page load
+        starRatings.forEach((starRating) => {
+            fillStars(starRating, 3); // Default to 3 stars when no situation is selected
+        });
+
+        // Event listener for clicking on a star to adjust the rating
+        starRatings.forEach(starRating => {
+            starRating.querySelectorAll(".star").forEach(star => {
+                star.addEventListener("click", function() {
+                    const rating = this.dataset.value;
+                    fillStars(starRating, rating);
+                });
+            });
+        });
+
+        // Function to update star ratings based on the selected situation
+        function updatePonderation(situation) {
+            const role = "Sales";
+            const subrole = subRoleSelect.value;
+            const defaultPonderation = interviewSituations[role][subrole][situation] || [3, 3, 3, 3, 3, 3];
+            starRatings.forEach((starRating, index) => {
+                fillStars(starRating, defaultPonderation[index]);
+            });
+        }
+
+        function resetPonderation() {
+            starRatings.forEach((starRating) => {
+                fillStars(starRating, 3);
+            });
+        }
 
         function populateSituations(subrole) {
             situationsSelect.innerHTML = '<option value="" disabled selected>Select a situation</option>';
@@ -289,21 +326,6 @@
             updatePonderation(situation);
         }
 
-        function updatePonderation(situation) {
-            const role = "Sales";
-            const subrole = subRoleSelect.value;
-            const defaultPonderation = interviewSituations[role][subrole][situation] || [3, 3, 3, 3, 3, 3];
-            ponderationInputs.forEach((input, index) => {
-                input.value = defaultPonderation[index];
-            });
-        }
-
-        function resetPonderation() {
-            ponderationInputs.forEach(input => {
-                input.value = 3;
-            });
-        }
-
         subRoleSelect.addEventListener("change", function() {
             populateSituations(subRoleSelect.value);
             selectedSituationsList.innerHTML = ""; // Clear the selected situations when the role changes
@@ -337,8 +359,9 @@
             }
         });
     });
-
+    
 </script>
+
 
 
 
