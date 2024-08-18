@@ -1,90 +1,440 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="{{ url_for('static', filename='static/js/chat.js') }}"></script>
+    <script src="{{ url_for('static', filename='static/js/chat-input.js') }}"></script>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-{% block title %}Chat{% endblock %}
-{% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='static/styles.css') }}">
-<script src="{{ url_for('static', filename='static/js/chat.js') }}"></script>
-<script src="{{ url_for('static', filename='static/js/chat-input.js') }}"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        /* Page layout */
+        body, html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Upper Section positioned between sidebars */
+        .upper-section {
+            position: fixed;
+            top: 0;
+            left: 12%;
+            right: 12%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #03005b;
+            padding: 10px 20px;
+            color: white;
+            height: 10%;
+        }
+
+        /* Logo in upper section */
+        .upper-section .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .upper-section .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .upper-section .logo h1 {
+            font-size: 24px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .upper-section .logo p {
+            font-size: 14px;
+            margin: 0;
+            font-weight: lighter;
+        }
 
 
-<div class="chat-container">
-    <div class="chat-sidebar-left">
-        <div class="search-bar">
-            <input type="text" placeholder="Search chats">
+        /* Green chip styling */
+        .green-chip {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: green; /* Green color */
+            border-radius: 50%; /* Circular shape */
+            margin-right: 8px; /* Spacing between chip and text */
+            vertical-align: middle; /* Align with the text */
+        }
+
+        /* Live interview wrapper styling */
+        .live-interview-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+
+        /* Timer wrapper */
+        .timer-wrapper {
+            font-size: 14px;
+            color: white;
+            text-align: right;
+            margin-right: 50px;
+        }
+
+        /* Left Sidebar */
+        .chat-sidebar-left {
+            background-color: #f4f4f9;
+            color: #03005b;
+            padding: 20px;
+            width: 12%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+        }
+
+        /* Right Sidebar */
+        .chat-sidebar-right {
+            width: 12%;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: fixed;
+            right: 0;
+            height: 100vh;
+            top: 0;
+        }
+
+        .chat-sidebar-right img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            margin-top: 10vh;
+        }
+
+        .chat-sidebar-right h3 {
+            font-size: 18px;
+            margin: 0;
+            margin-bottom: 10px;
+            color: #03005b;
+        }
+
+        .chat-sidebar-right .status-chip {
+            background-color: green;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        /* Welcome and Application Info */
+        .chat-sidebar-left h3 {
+            margin-top: 10vh;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .chat-sidebar-left p {
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        /* Powered by section */
+        .powered-by {
+            margin-top: auto;
+            text-align: center;
+            font-size: 14px;
+            color: #03005b;
+        }
+
+        .powered-by img {
+            margin-top: 5px;
+            width: 50px;
+            height: auto;
+        }
+
+        /* Main chat container */
+        .main-chat-container {
+            margin-left: 12%; /* Matches the left sidebar */
+            margin-right: 12%; /* Matches the right sidebar */
+            padding-left: 20px;
+            padding-right: 20px;
+            background-color: #ffffff;
+            height: calc(100vh - 8%); /* Ensures it takes up the remaining height */
+            display: flex;
+            flex-direction: column;
+        }
+        
+
+        /* Chat Content */
+        #chat-box {
+            margin-top: 12vh; 
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: white;
+        }
+
+        /* Message container to hold the message and the image/icon */
+        .message-container {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .assistant-container {
+            justify-content: flex-start;
+        }
+
+        .user-container {
+            justify-content: flex-end;
+        }
+
+        /* Message container */
+        .message {
+            max-width: 60%; /* Maximum width for messages */
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+            word-wrap: break-word; /* Ensure long words wrap within the box */
+            display: inline-block;
+        }
+        
+        /* Assistant message styling */
+        .message.assistant {
+            background-color: #f0f0f5; /* Light gray background */
+            color: #333; /* Dark gray text */
+            align-self: flex-start; /* Align to the left */
+            text-align: left;
+            float: left; /* Ensure it's aligned to the left */
+            clear: both; /* Start on a new line */
+        }
+        
+        /* User message styling */
+        .message.user {
+            background-color: #515BD4; /* User message background */
+            color: white;
+            align-self: flex-end; /* Align to the right */
+            text-align: right;
+            float: right; /* Ensure it's aligned to the right */
+            clear: both; /* Start on a new line */
+            margin-top: 10px; /* Adds some spacing between the assistant and user message */
+        }
+
+
+        /* Icon styling for both assistant and user */
+        .message-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        /* Specific styles for the assistant's Andy image */
+        .assistant-container .message-icon {
+            margin-left: 5px; /* Space between message and image */
+            margin-right: 10px; /* Space between message and image */
+        }
+
+        /* Specific styles for the user icon */
+        .user-container .message-icon {
+            margin-right: 5px; /* Space between message and image */
+            margin-left: 10px; /* Space between message and image */
+        }
+
+
+        /* Chat Input */
+        .chat-input {
+            display: flex;
+            align-items: center;
+            position: fixed; /* Fixed at the bottom of the container */
+            bottom: 0;
+            left: 12%; /* Align with the left sidebar */
+            right: 12%; /* Align with the right sidebar */
+            background-color: white;
+            padding: 10px 20px;
+        }
+
+        .chat-input form {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Adjusted textarea to span 80% */
+        .chat-input textarea {
+            flex: 0 0 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-right: 10px;
+            resize: none;
+            overflow: hidden;
+        }
+
+        .chat-input .icons {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .chat-input .icons i {
+            margin: 0 5px;
+            color: #999;
+            cursor: pointer;
+        }
+
+        /* Send Button */
+        .chat-input button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #515BD4;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .chat-input button:hover {
+            background-color: #03005b;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Upper Section -->
+        <div class="upper-section">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='static/enhanced_tunz_logo_only.png') }}" alt="logo">
+                <div>
+                    <h1>Tunz Ai</h1>
+                    <div class="live-interview-wrapper">
+                        <span class="green-chip"></span> 
+                        <p>Live interview</p>
+                    </div>
+                </div>
+            </div>
+            <div class="timer-wrapper" id="timer" 
+                data-duration="{{ duration }}" 
+                data-finish-url="{{ url_for('main.finish_chat', hr_id=hr_id, interview_id=interview_id, interview_parameter_id=interview_parameter_id, session_id=session_id, applicant_id=applicant.id) }}"
+                data-finished="{{ 'true' if is_finished else 'false' }}"
+                data-session-id="{{ session_id }}">
+                <span id="timer-value">Time remaining: {{ remaining_time }}</span>
+            </div>
         </div>
-        <div class="chat-list">
-            <div class="text-center">
-                <div class="chat-item">
-                    <h4> Interview of</h4>
-                    <p> {{applicant.name}} {{applicant.surname}}</p>
+
+        <!-- Chat Body with Sidebar and Main Chat Area -->
+        <div class="chat-body">
+            <!-- Left Sidebar -->
+            <div class="chat-sidebar-left">
+                <h3>Welcome {{ applicant_name }} {{ applicant_surname }}</h3>
+                <p><strong>{{ interview.name }}, Round 1 </strong></p>
+                <p> {{ company.name }}, Paris, France</p>
+                <div class="powered-by">
+                    <p>Powered by Tunz.ai</p>
+                    <img src="{{ url_for('static', filename='static/enhanced_tunz_logo_only.png') }}" alt="logo">
                 </div>
-                <div class="chat-item">
-                    <h4> Company</h4>
-                    <p> {{company.name}}</p>
+            </div>
+
+            <!-- Main Chat Container -->
+            <div class="main-chat-container">
+                <!-- Chat Content -->
+                <div id="chat-box">
+                    {% for question in questions %}
+                    <div class="message-container assistant-container">
+                        <img src="{{ url_for('static', filename='static/andy.png') }}" alt="Andy" class="message-icon">
+                        <div class="message assistant">
+                            <p>{{ question.content | replace('\n', '<br>') | safe }}</p>
+                        </div>
+                    </div>
+                    {% for answer in answers %}
+                    {% if answer.question_id == question.id %}
+                    <div class="message-container user-container">
+                        <div class="message user">
+                            <p>{{ answer.content | replace('\n', '<br>') | safe }}</p>
+                        </div>
+                        <img src="{{ url_for('static', filename='static/user_icon.png') }}" alt="Andy" class="message-icon">
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                    {% if is_finished %}
+                    <div class="message-container assistant-container">
+                        <div class="message assistant">
+                            <p>{{ thank_you_message | replace('\n', '<br>') | safe }}</p>
+                        </div>
+                        <img src="{{ url_for('static', filename='static/andy.png') }}" alt="Andy" class="message-icon">
+                    </div>
+                    {% endif %}
+                </div>                
+
+                <!-- Chat Input -->
+                <div class="chat-input">
+                    {% if not is_finished %}
+                    <form action="{{ url_for('main.chat', hr_id=hr_id, interview_id=interview_id, interview_parameter_id=interview_parameter_id, session_id=session_id, applicant_id=applicant.id, thread_id=thread_id) }}" method="post" id="chat-form">
+                        <input type="hidden" name="question_id" value="{{ questions[-1].id }}">
+                        <input type="hidden" name="thread_id" value="{{ thread_id }}">
+                        
+                        <!-- Textarea that spans 80% of the width -->
+                        <textarea name="answer" id="chat-textarea" required placeholder="Please enter your answer"></textarea>
+                        
+                        <!-- Icons next to the textarea -->
+                        <div class="icons">
+                            <i class="fas fa-microphone"></i>
+                            <i class="fas fa-smile"></i>
+                            <i class="fas fa-image"></i>
+                        </div>
+                        
+                        <!-- Send Button -->
+                        <button type="submit" id="send-button">Send</button>
+                    </form>
+                    
+                    {% else %}
+                    <form method="get" action="{{ url_for('main.finish_chat', hr_id=hr_id, interview_id=interview_id, interview_parameter_id=interview_parameter_id, session_id=session_id, applicant_id=applicant.id) }}">
+                        <button type="submit">Finish Interview</button>
+                    </form>
+                    {% endif %}
                 </div>
-                <div class="chat-item">
-                    <h4>Hiring Manager</h4>
-                    <p> {{hr.name}} {{hr.surname}}</p>
-                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="chat-sidebar-right">
+                <img src="{{ url_for('static', filename='static/andy.png') }}" alt="Andy">
+                <h3>Andy</h3>
+                <span class="status-chip">Currently Online</span>
             </div>
         </div>
     </div>
-    <div class="chat-content">
-        <div class="chat-header">
-            <div class="chat-header-left">
-                <h3>Live interview for the {{interview.name}} position in the {{interview_parameter.industry}} industry</h3>
-                <p>Powered by Tunz.AI</p>
-            </div>
-        </div>
-        <div id="chat-box">
-            {% for question in questions %}
-            <div class="message assistant">
-                <p>{{ question.content | replace('\n', '<br>') | safe }}</p>
-            </div>
-            {% for answer in answers %}
-            {% if answer.question_id == question.id %}
-            <div class="message user">
-                <p>{{ answer.content | replace('\n', '<br>') | safe }}</p>
-            </div>
-            {% endif %}
-            {% endfor %}
-            {% endfor %}
-            {% if is_finished %}
-            <div class="message assistant">
-                <p>{{ thank_you_message | replace('\n', '<br>') | safe }}</p>
-            </div>
-            {% endif %}
-        </div>        
-        <div class="chat-input">
-            {% if not is_finished %}
-            <form action="{{ url_for('main.chat', hr_id=hr_id, interview_id=interview_id, interview_parameter_id=interview_parameter_id, session_id=session_id, applicant_id=applicant.id, thread_id=thread_id) }}" method="post" id="chat-form">
-                <input type="hidden" name="question_id" value="{{ questions[-1].id }}">
-                <input type="hidden" name="thread_id" value="{{ thread_id }}">
-                <textarea name="answer" id="chat-textarea" required placeholder="Enter your message"></textarea>
-                <div class="chips-container">
-                    <!-- Chips will be added here dynamically if needed -->
-                </div>
-                <div class="icons">
-                    <i class="fas fa-microphone"></i>
-                    <i class="fas fa-smile"></i>
-                    <i class="fas fa-image"></i>
-                </div>
-                <button type="submit" id="send-button">Send</button>
-            </form>
-            {% else %}
-            <form method="get" action="{{ url_for('main.finish_chat', hr_id=hr_id, interview_id=interview_id, interview_parameter_id=interview_parameter_id, session_id=session_id, applicant_id=applicant.id) }}">
-                <button type="submit">Finish Interview</button>
-            </form>
-            {% endif %}
-        </div>        
-    </div>
-    <div class="chat-sidebar-right">
-        <div class="sidebar-right-header">
-        </div>
-            <i class="fas fa-clock"></i><span id="timer-value"></span>
-            <div id="timer" data-duration="{{ duration }}" data-finish-url="{{ url_for('main.finish_chat', hr_id=hr_id, interview_id=interview_id, interview_parameter_id=interview_parameter_id, session_id=session_id, applicant_id=applicant.id) }}" data-finished="{{ 'true' if is_finished else 'false' }}" data-session-id="{{ session_id }}">
-        </div>
-    </div>
-</div>
-{% endblock %}
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

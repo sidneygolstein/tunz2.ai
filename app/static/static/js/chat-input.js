@@ -42,15 +42,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 throw new Error("Failed to send message.");
             }
         }).then(html => {
-            // Parse the response HTML and extract the new question
+            // Parse the response HTML and extract the last question
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
-            const newQuestionElement = doc.querySelector("#chat-box .message.assistant:last-child p");
+            const lastQuestionElement = doc.querySelectorAll("#chat-box .message.assistant p");
 
-            if (newQuestionElement) {
-                const newQuestion = newQuestionElement.textContent;
+            if (lastQuestionElement && lastQuestionElement.length > 0) {
+                const newQuestion = lastQuestionElement[lastQuestionElement.length - 1].textContent;
+                
+                // Format the assistant's message with line breaks
+                const formattedMessage = newQuestion.replace(/\n/g, '<br>');
+
                 // Display the assistant's response
-                displayMessage(newQuestion, 'assistant');
+                displayMessage(formattedMessage, 'assistant');
                 
                 // Clear the textarea and re-enable the send button
                 textarea.value = '';
@@ -67,12 +71,44 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function displayMessage(message, role) {
+        // Replace double newline characters (\n\n) with two <br> tags for paragraph breaks
+        let formattedMessage = message.replace(/\n\n/g, '<br><br>');
+        
+        // Replace single newline characters (\n) with a single <br> tag for line breaks
+        formattedMessage = formattedMessage.replace(/\n/g, '<br>');
+    
+        // Create the message container
+        const messageContainer = document.createElement("div");
+        messageContainer.classList.add("message-container", `${role}-container`);
+    
+        // Create the message element
         const messageElement = document.createElement("div");
         messageElement.classList.add("message", role);
-        messageElement.innerHTML = `<p>${message}</p>`;
-        chatBox.appendChild(messageElement);
-        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+        messageElement.innerHTML = `<p>${formattedMessage}</p>`;
+    
+        // Add the appropriate icon for assistant or user
+        if (role === 'assistant') {
+            const assistantIcon = document.createElement("img");
+            assistantIcon.src = '/static/static/andy.png'; // Adjust the path as needed
+            assistantIcon.classList.add("message-icon");
+            messageContainer.appendChild(assistantIcon); // Add icon first
+            messageContainer.appendChild(messageElement); // Then add the message
+        } else if (role === 'user') {
+            const userIcon =  document.createElement("img");
+            userIcon.src = '/static/static/user_icon.png'; // Adjust the path as needed
+            userIcon.classList.add("message-icon");
+            messageContainer.appendChild(messageElement); // Add the message first
+            messageContainer.appendChild(userIcon); // Then add the icon
+        }
+    
+        // Append the entire message container to the chat box
+        chatBox.appendChild(messageContainer);
+    
+        // Scroll to the bottom of the chat box
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
+    
+    
 
     function disableSendButton() {
         sendButton.disabled = true;
