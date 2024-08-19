@@ -428,7 +428,7 @@ tbody tr {
 
 .sidebar {
     height: 100%;
-    width: 150px;
+    width: 8vw;
     position: fixed;
     top: 0;
     left: 0;
@@ -436,6 +436,23 @@ tbody tr {
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Ensure items are spaced between top and bottom */
+}
+
+.tunz-branding {
+    margin-top: 20px; /* Add some space above the branding section */
+    text-align: center; /* Center the text and logo */
+    color: white; /* Set the text color to white */
+}
+
+.tunz-branding img {
+    width: 50px; /* Set a reasonable width for the logo */
+    margin-top: 10px; /* Space between text and logo */
+}
+
+.tunz-branding p {
+    margin: 0; /* Remove any default margins */
+    font-size: 0.8em; /* Set a smaller, readable font size */
+    margin-bottom: 10px;
 }
 
 .sidebar h2 {
@@ -457,7 +474,7 @@ tbody tr {
 
 .sidebar a {
     text-decoration: none;
-    font-size: 18px;
+    font-size: 1em;
     color: rgb(255, 255, 255);
     display: block;
     padding: 10px 15px; /* Add padding to the left */

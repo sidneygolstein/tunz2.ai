@@ -517,6 +517,7 @@ def finish_chat(hr_id, interview_id, interview_parameter_id, session_id, applica
     current_session = Session.query.get_or_404(session_id)
     current_session.finished = True
     db.session.commit()
+    interview = Interview.query.get_or_404(interview_id)
     interview_parameter = InterviewParameter.query.get_or_404(interview_parameter_id)
     hr = HR.query.get_or_404(hr_id)
     hr_email =  hr.email
@@ -544,12 +545,12 @@ def finish_chat(hr_id, interview_id, interview_parameter_id, session_id, applica
     db.session.add(result)
     db.session.commit()
 
-    hr_link = get_url('main.home',
-                      hr_id = hr_id)
+    hr_link = get_url('main.session_details',
+                      hr_id = hr_id, session_id = session_id)
     msg = Message('Interview Finished',
                   sender='noreply@tunz.ai',
                   recipients=[hr_email])
-    msg.body = f'The interview of {applicant_name} {applicant_surname} (email: {applicant_email}) has finished. The subject was about {interview_parameter}. Click the following link to view the result: {hr_link}'
+    msg.body = f'The interview of {applicant_name} {applicant_surname} (email: {applicant_email}) for the {interview.name} position has finished. You can find the interview details on the following link: {hr_link}. You will also be able to compare the interview with the other applicants on your dashboard.'
     mail.send(msg)
     return redirect(url_for('main.applicant_review',  
                             hr_id = hr_id, 
