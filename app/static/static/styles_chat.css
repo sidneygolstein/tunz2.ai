@@ -292,8 +292,9 @@ body, html {
     border: 1px solid #ddd;
     border-radius: 20px;
     margin-right: 10px;
-    resize: none;
-    overflow: hidden;
+    resize: none; /* Disable manual resizing */
+    max-height: 100px; /* Limit the height to approximately 5 lines */
+    overflow-y: auto; /* Allow vertical scrolling */
 }
 
 .chat-input .icons {

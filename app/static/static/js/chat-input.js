@@ -4,10 +4,17 @@ document.addEventListener("DOMContentLoaded", function() {
     const sendButton = document.getElementById("send-button");
     const chatBox = document.getElementById("chat-box");
 
-    // Resize textarea dynamically
     textarea.addEventListener("input", function() {
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
+        // Reset the height to calculate the new height
+        textarea.style.height = 'auto';
+
+        // Calculate the new height (up to a maximum of 100px)
+        const maxHeight = 100; // Same as the max-height in the CSS
+        if (textarea.scrollHeight <= maxHeight) {
+            textarea.style.height = textarea.scrollHeight + 'px';
+        } else {
+            textarea.style.height = maxHeight + 'px'; // Set to the max height
+        }
     });
 
     // Prevent form submission on Enter key, allow line breaks
@@ -36,6 +43,11 @@ document.addEventListener("DOMContentLoaded", function() {
         // Prepare the form data for submission
         const formData = new FormData(form);
 
+        // Clear the textarea and set the placeholder after successful submission
+        textarea.value = '';
+        textarea.style.height = 'auto';
+        textarea.placeholder = "Please enter your answer";
+
         // Submit the form via fetch to avoid a full page reload
         fetch(form.action, {
             method: 'POST',
@@ -47,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 throw new Error("Failed to send message.");
             }
         }).then(html => {
+
             // Parse the response HTML and extract the last assistant question
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
@@ -58,9 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Replace the "Typing..." indicator with the assistant's response
                 replaceTypingIndicator(newQuestion);
 
-                // Clear the textarea and re-enable the send button
-                textarea.value = '';
-                textarea.style.height = 'auto';
+                // Re-enable the send button
                 enableSendButton();
 
                 // Sort messages by timestamp
