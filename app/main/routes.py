@@ -323,17 +323,22 @@ def applicant_home(hr_id, interview_parameter_id):
     company = Company.query.get_or_404(hr.company_id)
     company_name = company.name
     
+    error_message = None
 
     if request.method == 'POST':
         name = request.form['name']
         surname = request.form['surname']
         email = request.form['email']
 
-        new_applicant = Applicant(name=name, surname=surname, email_address=email)
-        db.session.add(new_applicant)
-        db.session.commit()
+        # Server-side validation
+        if not name or not surname or not email:
+            error_message = "All fields are required to start the interview."
+        else:
+            new_applicant = Applicant(name=name, surname=surname, email_address=email)
+            db.session.add(new_applicant)
+            db.session.commit()
 
-        return redirect(url_for('main.start_chat', hr_id = hr_id, interview_parameter_id=interview_parameter_id, interview_id=interview_id, applicant_id = new_applicant.id))
+            return redirect(url_for('main.start_chat', hr_id = hr_id, interview_parameter_id=interview_parameter_id, interview_id=interview_id, applicant_id = new_applicant.id))
 
     return render_template(
         'applicant/applicant_home.html', 
@@ -345,7 +350,8 @@ def applicant_home(hr_id, interview_parameter_id):
         industry=interview_parameter.industry, 
         hr_email=hr.email,
         duration=duration,
-        company_name = company_name
+        company_name = company_name,
+        error_message=error_message  # Pass the error message to the template
     )
 
 

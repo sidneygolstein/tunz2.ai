@@ -1,34 +1,70 @@
-/* LOGIN */
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-body {
+html, body {
+    height: 100%; /* Ensure the body takes the full height */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f4f4f9;
+    background-color: #ffffff;
     font-family: Arial, sans-serif;
-    margin: 0;
 }
 
+/* Applicant Container */
 .applicant-container {
-    background-color: #fff;
+    background-color: #f6f6ff; /* Background color */
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 80%;
-    max-width: 800px;
-    margin: auto;
+    width: 90vw; /* Responsive width based on viewport width */
+    max-width: 1200px; /* Maximum width for larger screens */
+    height: 95vh; /* Responsive height based on viewport height */
+    min-height: 400px; /* Minimum height for smaller screens */
+    max-height: 95vh; /* Maximum height for taller screens */
+    color: #222222; /* Text color */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Responsive font size based on viewport height */
+@media (max-height: 600px) {
+    .applicant-container {
+        font-size: 11px; /* Smaller font size for shorter screens */
+    }
+}
+
+@media (min-height: 601px) and (max-height: 800px) {
+    .applicant-container {
+        font-size: 13px; /* Medium font size for medium height screens */
+    }
+}
+
+@media (min-height: 801px) {
+    .applicant-container {
+        font-size: 14px; /* Larger font size for taller screens */
+    }
 }
 
 .applicant-container h1 {
-    font-size: 24px;
+    font-size: 2em; /* Heading font size */
     margin-bottom: 20px;
+    color: #222222;
 }
 
 .applicant-container p {
     text-align: left;
     margin-bottom: 15px;
+}
+
+.applicant-container h5 {
+    text-align: center;
+    margin-bottom: 5px;
+    margin-top: 10px;
 }
 
 .instructions {
@@ -37,7 +73,7 @@ body {
 }
 
 .instructions h2 {
-    font-size: 20px;
+    font-size: 1.5em;
     margin-bottom: 10px;
 }
 
@@ -50,6 +86,7 @@ body {
     margin-bottom: 10px;
 }
 
+/* Form Styling */
 .applicant-container form {
     display: flex;
     flex-direction: column;
@@ -60,15 +97,14 @@ body {
     display: none; /* Hide the label */
 }
 
+.applicant-container input[type="name"],
 .applicant-container input[type="email"],
-.applicant-container input[type="text"],
-.applicant-container input[type="confirm_password"],
-.applicant-container input[type="password"] {
-    padding: 10px;
-    margin-bottom: 10px;
+.applicant-container input[type="text"] {
+    padding: 12px;
+    margin-top: 10px;
     border: 1px solid #ddd;
     border-radius: 10px;
-    font-size: 14px;
+    font-size: 1em; /* Responsive font size */
     width: 95%;
 }
 
@@ -77,26 +113,28 @@ body {
     color: #aaa;
 }
 
+/* Button Styling */
 .applicant-container button {
-    padding: 10px;
-    background-color: #03005b;
+    padding: 12px;
+    background-color: #9885ff; /* Button color */
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
     margin-top: 10px;
     width: 100%;
+    font-size: 1em; /* Responsive font size */
 }
 
 .applicant-container button:hover {
-    background-color: #03005b;
+    background-color: #7a6cd9; /* Darker shade on hover */
 }
 
 .applicant-container .forgot-password-link {
     display: block;
     margin-top: 10px;
     font-size: 14px;
-    color: #03005b;
+    color: #2d005e;
     text-decoration: none;
     text-align: right;
 }
@@ -108,6 +146,20 @@ body {
 /* Responsive adjustments */
 @media (min-width: 768px) {
     .applicant-container {
-        width: 60%;
+        width: 70vw; /* Adjusted width for larger screens */
     }
+}
+
+/* Powered by section */
+.powered-by {
+    margin-top: auto;
+    text-align: center;
+    font-size: 14px;
+    color: #222222;
+}
+
+.powered-by img {
+    margin-top: 25px;
+    width: 50px;
+    height: auto;
 }

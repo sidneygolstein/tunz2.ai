@@ -24,6 +24,12 @@
             </ul>
         </div>
         <h3> <strong> Before starting, please carefully fill the following infos: </strong></h3>
+        <!-- Display the error message if it exists -->
+        {% if error_message %}
+            <div class="error-message" style="color: red; margin-bottom: 20px;">
+                {{ error_message }}
+            </div>
+        {% endif %}
         <form action="{{ url_for('main.applicant_home', hr_id=hr_id, interview_parameter_id=interview_parameter_id) }}" method="POST">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" placeholder="Please enter your name" required>
@@ -33,8 +39,15 @@
             <input type="email" id="email" name="email" placeholder="Please enter your email" required>
             <button type="submit" class="btn btn-primary start-interview-btn" data-action="start-itw">Start Interview</button>
         </form>
+
+        <div class="powered-by">
+            <img src="{{ url_for('static', filename='static/enhanced_tunz_logo_only.png') }}" alt="logo">
+            <h5>Powered by Tunz.ai</h5>
+        </div>
+    
     </div>
 
+    
     <!-- Confirmation Modal -->
     <div id="confirmation-modal" class="modal">
         <div class="modal-content">
