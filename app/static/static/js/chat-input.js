@@ -30,6 +30,9 @@ document.addEventListener("DOMContentLoaded", function() {
         // Disable the send button to prevent multiple submissions
         disableSendButton();
 
+        // Show "Typing..." indicator while waiting for the assistant's response
+        displayTypingIndicator();
+
         // Prepare the form data for submission
         const formData = new FormData(form);
 
@@ -52,13 +55,16 @@ document.addEventListener("DOMContentLoaded", function() {
             if (lastQuestionElement && lastQuestionElement.length > 0) {
                 const newQuestion = lastQuestionElement[lastQuestionElement.length - 1].innerHTML;
 
-                // Display the assistant's response with formatted HTML to preserve line breaks
-                displayMessage(newQuestion, 'assistant');
+                // Replace the "Typing..." indicator with the assistant's response
+                replaceTypingIndicator(newQuestion);
 
                 // Clear the textarea and re-enable the send button
                 textarea.value = '';
                 textarea.style.height = 'auto';
                 enableSendButton();
+
+                // Sort messages by timestamp
+                sortMessagesByTimestamp();
             } else {
                 console.error("No new question received.");
                 enableSendButton();
@@ -68,6 +74,19 @@ document.addEventListener("DOMContentLoaded", function() {
             enableSendButton();
         });
     });
+
+    function sortMessagesByTimestamp() {
+        const messageContainers = Array.from(chatBox.querySelectorAll('.message-container'));
+        messageContainers.sort((a, b) => {
+            const timestampA = parseInt(a.dataset.timestamp, 10);
+            const timestampB = parseInt(b.dataset.timestamp, 10);
+            return timestampA - timestampB;
+        });
+
+        // Clear the chat box and re-append messages in sorted order
+        chatBox.innerHTML = '';
+        messageContainers.forEach(container => chatBox.appendChild(container));
+    }
 
     function displayMessage(message, role) {
         // Replace double newline characters (\n\n) with two <br> tags for paragraph breaks
@@ -79,6 +98,10 @@ document.addEventListener("DOMContentLoaded", function() {
         // Create the message container
         const messageContainer = document.createElement("div");
         messageContainer.classList.add("message-container", `${role}-container`);
+
+        // Generate a timestamp
+        const timestamp = Date.now();
+        messageContainer.dataset.timestamp = timestamp; // Add timestamp as a data attribute
 
         // Create the message element
         const messageElement = document.createElement("div");
@@ -93,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function() {
             messageContainer.appendChild(assistantIcon); // Add icon first
             messageContainer.appendChild(messageElement); // Then add the message
         } else if (role === 'user') {
-            const userIcon =  document.createElement("img");
+            const userIcon = document.createElement("img");
             userIcon.src = '/static/static/user_icon.png'; // Adjust the path as needed
             userIcon.classList.add("message-icon");
             messageContainer.appendChild(messageElement); // Add the message first
@@ -103,17 +126,72 @@ document.addEventListener("DOMContentLoaded", function() {
         // Append the entire message container to the chat box
         chatBox.appendChild(messageContainer);
 
+        // Sort messages by timestamp after appending the new message
+        sortMessagesByTimestamp();
+
         // Scroll to the bottom of the chat box
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
+    function displayTypingIndicator() {
+        // Create the "Typing..." indicator
+        const typingContainer = document.createElement("div");
+        typingContainer.classList.add("message-container", "assistant-container", "typing-indicator");
+        typingContainer.id = "typing-indicator"; // Assign an ID to find and replace later
+
+        // Add a timestamp to the typing indicator for proper sorting
+        typingContainer.dataset.timestamp = Date.now(); 
+
+        // Create the message element with "Typing..." text
+        const typingElement = document.createElement("div");
+        typingElement.classList.add("message", "assistant");
+        typingElement.innerHTML = `<p>Typing...</p>`;
+
+        // Add the Andy icon
+        const assistantIcon = document.createElement("img");
+        assistantIcon.src = '/static/static/andy.png'; // Adjust the path as needed
+        assistantIcon.classList.add("message-icon");
+
+        typingContainer.appendChild(assistantIcon); // Add icon first
+        typingContainer.appendChild(typingElement); // Then add the "Typing..." message
+
+        // Append the typing indicator to the chat box
+        chatBox.appendChild(typingContainer);
+
+        // Sort messages by timestamp after appending the typing indicator
+        sortMessagesByTimestamp();
+
+        // Scroll to the bottom of the chat box
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function replaceTypingIndicator(message) {
+        const typingIndicator = document.getElementById("typing-indicator");
+
+        if (typingIndicator) {
+            const messageElement = typingIndicator.querySelector(".message.assistant p");
+            if (messageElement) {
+                // Replace "Typing..." with the assistant's response
+                messageElement.innerHTML = message;
+
+                // Reset the styles to the normal assistant message styles
+                typingIndicator.classList.remove("typing-indicator"); // Remove the typing-indicator class
+                messageElement.style.fontStyle = "normal"; // Reset font style
+                typingIndicator.querySelector("img.message-icon").style.opacity = "1"; // Reset icon opacity
+            }
+
+            // Remove the typing indicator ID to prevent further manipulation
+            typingIndicator.removeAttribute("id");
+        }
+    }
+
     function disableSendButton() {
         sendButton.disabled = true;
-        sendButton.style.backgroundColor = "#a0a0a0";
+        sendButton.style.backgroundColor = "#2d005e";
     }
 
     function enableSendButton() {
         sendButton.disabled = false;
-        sendButton.style.backgroundColor = "#03005b";
+        sendButton.style.backgroundColor = "#515BD4"; // Correct hex color code
     }
 });
