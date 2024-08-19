@@ -1,66 +1,141 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-/* LOGIN */
-
-body {
+html, body {
+    height: 100%; /* Ensure the body takes the full height */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f4f4f9;
+    background-color: #ffffff;
     font-family: Arial, sans-serif;
-    margin: 0;
 }
-.login-container {
+
+.auth-container h2 {
+    margin-bottom: 20px; /* Increase space below each heading */
+}
+
+/* Auth Container */
+.auth-container {
     background-color: #fff;
+    color: #03005b; 
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 90%; /* Start with 90% width */
-    max-width: 400px; /* Max width to prevent it from being too large on bigger screens */
-}
-
-.login-container-large {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 90%; /* Start with 90% width */
-    max-width: 800; /* Max width to prevent it from being too large on bigger screens */
-}
-
-.login-container-inner {
-    margin: 0 auto;
-    width: 100%; /* Inner container takes the full width of the outer container */
-}
-.login-container h1, .login-container h2 {
-    margin-bottom: 20px;
-}
-.login-container form {
+    width: 100%; /* Responsive width */
+    max-width:400px; /* Limit the max width */
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
-.login-container label {
-    display: none; /* Hide the label */
+
+
+/* Responsive font size based on viewport height */
+@media (max-height: 600px) {
+    .auth-container {
+        font-size: 11px; /* Smaller font size for shorter screens */
+    }
+
+    .auth-container h2 {
+        font-size: 1.5em;
+    }
+
+    .auth-container input {
+        font-size: 0.8em;
+    }
+
+    .auth-container button {
+        font-size: 0.8em;
+    }
+
+    .auth-container .register-link,
+    .auth-container .forgot-password-link {
+        font-size: 0.8em;
+    }
 }
-.login-container input[type="email"],
-.login-container input[type="text"],
-.login-container input[type="confirm_password"],
-.login-container input[type="password"] {
-    padding: 10px;
+
+@media (min-height: 601px) and (max-height: 800px) {
+    .auth-container {
+        font-size: 12px; /* Medium font size for medium height screens */
+    }
+
+    .auth-container h2 {
+        font-size: 1.7em;
+    }
+
+    .auth-container input {
+        font-size: 1em;
+    }
+
+    .auth-container button {
+        font-size: 1em;
+    }
+
+    .auth-container .register-link,
+    .auth-container .forgot-password-link {
+        font-size: 0.9em;
+    }
+}
+
+@media (min-height: 801px) {
+    .auth-container {
+        font-size: 14px; /* Larger font size for taller screens */
+    }
+
+    .auth-container h2 {
+        font-size: 2em;
+    }
+
+    .auth-container input {
+        font-size: 1.2em;
+    }
+
+    .auth-container button {
+        font-size: 1.2em;
+    }
+
+    .auth-container .register-link,
+    .auth-container .forgot-password-link {
+        font-size: 1em;
+    }
+}
+
+
+
+/* Form Elements */
+.auth-container form {
+    max-width: 400px; /* Set a max width for forms */
+    margin: 0 auto; /* Center the form */
+    margin-top: 40px;
+}
+
+
+.auth-container input[type="email"],
+.auth-container input[type="password"],
+.auth-container input[type="name"],
+.auth-container input[type="text"] {
+    padding: 12px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 10px;
-    font-size: 14px;
-    width: 95%;
+    font-size: 16px;
+    width: 100%; /* Ensure inputs take the full width */
+    max-width: 100%; /* Ensure inputs do not overflow the form */
+
 }
-.login-container input::placeholder {
+
+.auth-container input::placeholder {
     font-size: 14px;
     color: #aaa;
 }
-.login-container button {
-    padding: 10px;
+
+/* Button Styling */
+.auth-container button {
+    padding: 12px;
     background-color: #03005b;
     color: white;
     border: none;
@@ -68,29 +143,52 @@ body {
     cursor: pointer;
     margin-top: 10px;
     width: 100%;
+    font-size: 16px;
 }
-.login-container button:hover {
-    background-color: #03005b;
+
+.auth-container button:hover {
+    background-color: #020046;
 }
-.login-container .register-link,
-.login-container .forgot-password-link {
+
+/* Links */
+.auth-container .register-link,
+.auth-container .forgot-password-link {
     display: block;
     margin-top: 10px;
     font-size: 14px;
     color: #03005b;
     text-decoration: none;
 }
-.login-container .forgot-password-link {
+
+.auth-container .forgot-password-link {
     text-align: right;
 }
-.login-container .register-link:hover,
-.login-container .forgot-password-link:hover {
+
+.auth-container .register-link:hover,
+.auth-container .forgot-password-link:hover {
     text-decoration: underline;
+}
+
+/* Tunz Branding */
+.auth-container .tunz-branding {
+    margin-top: 10vh;
+    text-align: center;
+}
+
+.auth-container .tunz-branding p {
+    color: #03005b;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.auth-container .tunz-branding img {
+    width: 80px;
+    height: auto;
 }
 
 /* Responsive adjustments */
 @media (min-width: 768px) {
-    .login-container {
-        width: 50%;
+    .auth-container {
+        width: 100%;
     }
 }

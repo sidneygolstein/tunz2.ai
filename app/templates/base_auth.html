@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Auth Page{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/styles_auth.css') }}">
+</head>
+<body>
+    <div class="auth-container">
+        {% block content %}
+        <!-- Content from child templates will be injected here -->
+        {% endblock %}
+    </div>
+</body>
+</html>
