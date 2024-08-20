@@ -62,7 +62,7 @@
                         <td>{{ interview.duration }} min</td>
                         <td align="center">{{ interview.sessions_count }}</td>
                         <td>
-                            <button class="copy-link-btn" data-link="{{ get_url('main.applicant_home', hr_id=hr_id, interview_parameter_id=interview.interview_parameter_id) }}">
+                            <button class="copy-link-btn" data-link="{{ url_for('main.applicant_home', hr_id = hr_id, interview_parameter_id=interview.interview_parameter_id, _external=True) }}">
                                 <i class="fas fa-link"></i>
                             </button>                        
                         </td>                    
