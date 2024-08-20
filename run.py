@@ -1,7 +1,7 @@
 from app import create_app
 from dotenv import load_dotenv
 from config import Config
-from .helpers import get_url  # Import your helper function
+from helpers import get_url
 
 
 load_dotenv()
