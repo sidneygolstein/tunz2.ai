@@ -17,58 +17,65 @@ html, body {
 /* Applicant Container */
 .applicant-container {
     background-color: #f6f6ff;
-    padding: 2vh 3vw; /* Reduced padding */
-    border-radius: 1vh; /* Reduced border-radius */
+    padding: 3vh 4vw; /* Reduced padding */
+    border-radius: 1.5vh;
     text-align: justify;
-    width: 60vw; /* Adjusted width */
-    max-width: 1200px;
-    min-height: 70vh; /* Adjusted height */    
-    max-height: 95vh; /* Adjusted height */
+    width: 95vw;
+    max-width: 1800px;
+    min-height: 75vh;    
+    max-height: 90vh;
     color: #222222;
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Space between top, middle, and bottom sections */
 }
 
-/* Responsive font size based on viewport height */
-@media (max-height: 600px) {
-    .applicant-container {
-        font-size: 1.1vh; /* Reduced font size for smaller screens */
-    }
-}
-
-@media (min-height: 601px) and (max-height: 800px) {
-    .applicant-container {
-        font-size: 1.3vh;
-    }
-}
-
-@media (min-height: 801px) {
-    .applicant-container {
-        font-size: 1.5vh;
-    }
-}
+/* Fixed font sizes with responsive adjustments */
 
 /* Welcome heading */
 .applicant-container h1 {
     text-align: center;
-    font-size: 2vh; /* Reduced font size */
-    margin-bottom: 2vh; /* Reduced margin */
+    font-size: 26px; /* Fixed base font size */
+    margin-bottom: 2.5vh;
     color: #222222;
+}
+
+@media (max-height: 600px) {
+    .applicant-container h1 {
+        font-size: 24px; /* Adjusted for smaller screens */
+    }
+}
+
+@media (min-height: 801px) {
+    .applicant-container h1 {
+        font-size: 30px; /* Adjusted for larger screens */
+    }
 }
 
 /* Instructions section */
 .instructions {
-    text-align: justify; /* Justified text for the first paragraph */
-    margin-bottom: 3vh; /* Reduced margin */
+    text-align: justify;
+    margin-bottom: 1.5vh;
     width: 100%;
 }
 
 .instructions h2 {
     text-align: center;
-    font-size: 1.7vh; /* Reduced font size */
-    margin-bottom: 1.5vh; /* Reduced margin */
-    margin-top: 1.5vh; /* Reduced margin */
+    font-size: 22px; /* Fixed base font size */
+    margin-bottom: 1.5vh;
+    margin-top: 1.5vh;
+}
+
+@media (max-height: 600px) {
+    .instructions h2 {
+        font-size: 18px; /* Adjusted for smaller screens */
+    }
+}
+
+@media (min-height: 801px) {
+    .instructions h2 {
+        font-size: 24px; /* Adjusted for larger screens */
+    }
 }
 
 .instructions ul {
@@ -78,7 +85,7 @@ html, body {
 }
 
 .instructions ul li {
-    margin-bottom: 1.2vh; /* Reduced margin */
+    margin-bottom: 1.4vh;
 }
 
 /* Form Styling */
@@ -88,32 +95,31 @@ html, body {
     align-items: center;
 }
 
-.applicant-container input[type="name"],
 .applicant-container input[type="text"],
 .applicant-container input[type="email"] {
-    padding: 1.5vh; /* Reduced padding */
-    margin-top: 1.5vh; /* Reduced margin */
+    padding: 1.8vh;
+    margin-top: 1vh;
     border: 1px solid #ddd;
-    border-radius: 1vh; /* Reduced border-radius */
-    width: 55%; /* Adjusted width */
+    border-radius: 1.5vh;
+    width: 60%;
 }
 
 .applicant-container input::placeholder {
-    font-size: 1.4vh; /* Reduced placeholder font size */
+    font-size: 14px;
     color: #aaa;
 }
 
 /* Button Styling */
 .applicant-container button {
-    padding: 1.5vh; /* Reduced padding */
+    padding: 1.8vh;
     background-color: #9885ff;
     color: white;
     border: none;
-    border-radius: 1vh; /* Reduced border-radius */
+    border-radius: 1.5vh;
     cursor: pointer;
-    margin-top: 3vh; /* Reduced margin */
-    width: 35%; /* Adjusted width */
-    font-size: 1.4vh; /* Reduced font size */
+    margin-top: 3.5vh;
+    width: 40%;
+    font-size: 1.6vh;
 }
 
 .applicant-container button:hover {
@@ -124,14 +130,26 @@ html, body {
 .powered-by {
     margin-top: auto;
     text-align: center;
-    font-size: 1.2vh; /* Adjusted font size */
+    font-size: 16px; /* Fixed base font size */
     color: #222222;
-    margin-bottom: 2vh; /* Adjusted margin */
+    margin-bottom: 2.5vh;
+}
+
+@media (max-height: 600px) {
+    .powered-by {
+        font-size: 14px; /* Adjusted for smaller screens */
+    }
+}
+
+@media (min-height: 801px) {
+    .powered-by {
+        font-size: 18px; /* Adjusted for larger screens */
+    }
 }
 
 .powered-by img {
-    margin-top: 1.5vh; /* Adjusted margin */
-    width: 4.5vh; /* Adjusted image size */
+    margin-top: 2vh;
+    width: 5vh;
     height: auto;
 }
 
@@ -151,16 +169,16 @@ html, body {
 .modal-content {
     background-color: #fefefe;
     margin: 5% auto;
-    padding: 3vh; /* Reduced padding */
+    padding: 3vh;
     border: 1px solid #888;
     width: 30vw;
     text-align: center;
-    border-radius: 1vh; /* Reduced border-radius */
+    border-radius: 1.5vh;
 }
 
 #confirm-yes, #confirm-no {
-    padding: 1.5vh 3vw; /* Reduced padding */
-    margin: 2vh;
+    padding: 1.8vh 3vw;
+    margin: 2.5vh;
     border: none;
     cursor: pointer;
 }
