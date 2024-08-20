@@ -20,8 +20,8 @@ html, body {
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    width: 40vw; /* Responsive width based on viewport width */
-    max-width: 800px; /* Maximum width for larger screens */
+    width: 60vw; /* Responsive width based on viewport width */
+    max-width: 1500px; /* Maximum width for larger screens */
     height: 95vh; /* Responsive height based on viewport height */
     min-height: 400px; /* Minimum height for smaller screens */
     max-height: 95vh; /* Maximum height for taller screens */
@@ -148,7 +148,7 @@ html, body {
 /* Responsive adjustments */
 @media (min-width: 768px) {
     .applicant-container {
-        width: 40vw; /* Adjusted width for larger screens */
+        width: 60vw; /* Adjusted width for larger screens */
     }
 }
 
