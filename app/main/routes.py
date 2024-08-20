@@ -127,7 +127,7 @@ def home(hr_id):
 
     return render_template('hr/hr_homepage.html', hr_name=hr.name, hr_surname=hr.surname, company_name=hr.company.name,
                             hr_id=hr.id, interview_data=interview_data, total_interviews=total_interviews,
-                           total_sessions=total_sessions, total_applicants=total_applicants, get_color=get_color)
+                           total_sessions=total_sessions, total_applicants=total_applicants, get_color=get_color, get_url=get_url)
 
 
 
