@@ -20,8 +20,8 @@ html, body {
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    width: 90vw; /* Responsive width based on viewport width */
-    max-width: 1200px; /* Maximum width for larger screens */
+    width: 40vw; /* Responsive width based on viewport width */
+    max-width: 800px; /* Maximum width for larger screens */
     height: 95vh; /* Responsive height based on viewport height */
     min-height: 400px; /* Minimum height for smaller screens */
     max-height: 95vh; /* Maximum height for taller screens */
@@ -65,11 +65,12 @@ html, body {
     text-align: center;
     margin-bottom: 5px;
     margin-top: 10px;
+    margin-bottom: 40px;
 }
 
 .instructions {
     text-align: left;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .instructions h2 {
@@ -97,6 +98,7 @@ html, body {
     display: none; /* Hide the label */
 }
 
+
 .applicant-container input[type="name"],
 .applicant-container input[type="email"],
 .applicant-container input[type="text"] {
@@ -105,7 +107,7 @@ html, body {
     border: 1px solid #ddd;
     border-radius: 10px;
     font-size: 1em; /* Responsive font size */
-    width: 95%;
+    width: 60%;
 }
 
 .applicant-container input::placeholder {
@@ -121,8 +123,8 @@ html, body {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    margin-top: 10px;
-    width: 100%;
+    margin-top: 30px;
+    width: 40%;
     font-size: 1em; /* Responsive font size */
 }
 
@@ -146,7 +148,7 @@ html, body {
 /* Responsive adjustments */
 @media (min-width: 768px) {
     .applicant-container {
-        width: 70vw; /* Adjusted width for larger screens */
+        width: 40vw; /* Adjusted width for larger screens */
     }
 }
 
