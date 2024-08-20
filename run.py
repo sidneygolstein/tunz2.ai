@@ -9,7 +9,7 @@ app = create_app()
 
 
 @app.context_processor
-def utility_processor():
+def inject_helpers():
     return dict(get_url=get_url)
 
 if __name__ == '__main__':
