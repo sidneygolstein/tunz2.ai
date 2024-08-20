@@ -5,44 +5,43 @@ document.addEventListener("DOMContentLoaded", function() {
     const initialDuration = parseInt(timerElement.getAttribute('data-duration'), 10);
     let sessionFinished = timerElement.getAttribute('data-finished') === 'true';
 
+    // Retrieve or initialize the remaining time from localStorage, or set to initial duration
+    let remainingTime = parseInt(localStorage.getItem('remainingTime_' + sessionId)) || initialDuration;
 
-     // Retrieve the remaining time from localStorage or set to initial duration
-     let timerDuration = parseInt(localStorage.getItem('remainingTime_' + sessionId)) || initialDuration;
+    // Retrieve warning flags from sessionStorage
+    let warningShown = sessionStorage.getItem('warningShown') === 'true';
+    let warningClosed = sessionStorage.getItem('warningClosed') === 'true';
 
-    
-
-
-    // Set warning flags
-    let warningShown = sessionStorage.getItem('warningShown') === 'true'; // Retrieve from sessionStorage
-    let warningClosed = sessionStorage.getItem('warningClosed') === 'true'; // Retrieve from sessionStorage
-
+    // Update the timer display
     function updateTimer() {
         if (sessionFinished) {
             clearInterval(timerInterval);
             localStorage.removeItem('remainingTime_' + sessionId); // Clear storage on finish
             return;
         }
-        let minutes = Math.floor(timerDuration / 60);
-        let seconds = timerDuration % 60;
+
+        let minutes = Math.floor(remainingTime / 60);
+        let seconds = remainingTime % 60;
         timerElement.innerHTML = `Time Remaining: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
 
-        if (timerDuration <= 30 && !warningShown && !warningClosed) {
+        if (remainingTime <= 30 && !warningShown && !warningClosed) {
             showWarningPopup();
-            warningShown = true; // Set the warning as shown
-            sessionStorage.setItem('warningShown', 'true'); // Store in sessionStorage
+            warningShown = true;
+            sessionStorage.setItem('warningShown', 'true');
         }
 
-        if (timerDuration <= 0) {
+        if (remainingTime <= 0) {
+            remainingTime = 0;
             clearInterval(timerInterval);
             localStorage.removeItem('remainingTime_' + sessionId);
             window.location.href = finishUrl;
         } else {
-            timerDuration -= 1; // Decrease by 1 second
-            // Save remaining time to localStorage
-            localStorage.setItem('remainingTime_' + sessionId, timerDuration);
+            remainingTime -= 1;
+            localStorage.setItem('remainingTime_' + sessionId, remainingTime); // Store the updated remaining time
         }
     }
 
+    // Function to handle the warning popup display
     function showWarningPopup() {
         if (document.getElementById('warning-popup')) {
             return; // If the popup already exists, do nothing
@@ -61,16 +60,25 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const closeButton = document.getElementById('close-popup');
         closeButton.addEventListener('click', function() {
-            warningClosed = true; // Set the warning as closed
-            sessionStorage.setItem('warningClosed', 'true'); // Store in sessionStorage
+            warningClosed = true;
+            sessionStorage.setItem('warningClosed', 'true');
             document.body.removeChild(popup);
         });
     }
 
-    const timerInterval = setInterval(updateTimer, 1000); // Update every second
-    updateTimer();
+    // Synchronize across tabs
+    function syncTimerAcrossTabs(event) {
+        if (event.key === 'remainingTime_' + sessionId) {
+            remainingTime = parseInt(localStorage.getItem('remainingTime_' + sessionId)) || initialDuration;
+        }
+    }
 
-    // Attach the remaining time to the form submission and disable the submit button
+    window.addEventListener('storage', syncTimerAcrossTabs);
+
+    const timerInterval = setInterval(updateTimer, 1000);
+    updateTimer(); // Initial call to set the timer display correctly
+
+    // Attach the remaining time to the form submission
     const chatForm = document.getElementById('chat-form');
     const sendButton = document.getElementById('send-button');
     if (chatForm) {
@@ -79,11 +87,16 @@ document.addEventListener("DOMContentLoaded", function() {
             const remainingTimeInput = document.createElement('input');
             remainingTimeInput.type = 'hidden';
             remainingTimeInput.name = 'remaining_time';
-            remainingTimeInput.value = timerDuration;
+            remainingTimeInput.value = remainingTime; // Attach current remaining time
             chatForm.appendChild(remainingTimeInput);
+
+            // Ensure that the remaining time is saved before submission
+            localStorage.setItem('remainingTime_' + sessionId, remainingTime);
         });
     }
 
-
-   
+    // Store the remaining time in localStorage if it's not already stored
+    if (!localStorage.getItem('remainingTime_' + sessionId)) {
+        localStorage.setItem('remainingTime_' + sessionId, remainingTime);
+    }
 });

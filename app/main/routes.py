@@ -550,7 +550,7 @@ def finish_chat(hr_id, interview_id, interview_parameter_id, session_id, applica
     msg = Message('Interview Finished',
                   sender='noreply@tunz.ai',
                   recipients=[hr_email])
-    msg.body = f'The interview of {applicant_name} {applicant_surname} (email: {applicant_email}) for the {interview.name} position has finished. You can find the interview details on the following link: {hr_link}. You will also be able to compare the interview with the other applicants on your dashboard.'
+    msg.body = f'The interview of {applicant_name} {applicant_surname} (email: {applicant_email}) for the {interview.name} position has finished. You can find the interview details by clicking on the following link: {hr_link}. On your dashboard, you will also be able to compare this interview with the other applicants.'
     mail.send(msg)
     return redirect(url_for('main.applicant_review',  
                             hr_id = hr_id, 
@@ -633,25 +633,6 @@ def applicant_result(hr_id, interview_id, interview_parameter_id, session_id, ap
 
 
 
-@main.route('/restart', methods=['POST'])
-def restart():
-    session.pop('session_id', None)
-    session.pop('thread_id', None)
-    session.pop('assistant_id', None)
-    session.pop('language', None)
-    session.pop('finished', None)
-    session.pop('interview_parameter_id', None)
-    session.pop('interview_id', None)
-    return redirect(url_for('main.home'))
-
-def calculate_score(answers,session_id):
-    score_result = len(answers) * 10  # Example logic: 10 points per answer
-    return score_result
 
 
-def send_email(email_sender, email_receiver, message):
-    msg = Message('Interview Finished',
-                  sender=email_sender,
-                  recipients=[email_receiver])
-    msg.body = message
-    return mail.send(msg)
+

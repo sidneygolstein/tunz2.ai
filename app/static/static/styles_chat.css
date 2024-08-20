@@ -228,7 +228,7 @@ body, html {
     background-color: #515BD4; /* User message background */
     color: white;
     align-self: flex-end; /* Align to the right */
-    text-align: right;
+    text-align: left;
     float: right; /* Ensure it's aligned to the right */
     clear: both; /* Start on a new line */
     margin-top: 10px; /* Adds some spacing between the assistant and user message */
