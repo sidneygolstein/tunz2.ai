@@ -18,6 +18,8 @@ html, body {
     margin-bottom: 20px; /* Increase space below each heading */
 }
 
+
+
 /* Auth Container */
 .auth-container {
     background-color: #fff;
@@ -33,6 +35,10 @@ html, body {
     justify-content: center;
 }
 
+.auth-container p{
+    color: #aaa; /* Smaller font size for shorter screens */
+}
+
 
 /* Responsive font size based on viewport height */
 @media (max-height: 600px) {
@@ -40,7 +46,7 @@ html, body {
         font-size: 11px; /* Smaller font size for shorter screens */
     }
 
-    .auth-container h2 {
+    .auth-container p {
         font-size: 1.5em;
     }
 
