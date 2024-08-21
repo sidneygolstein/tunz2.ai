@@ -41,6 +41,12 @@ html, body {
         margin-bottom: 12px;
         text-align: justify;
     }
+    .form-control {
+        font-size: 14px;
+    }
+    .result-container label {
+        font-size: 14px;
+    }
 }
 
 @media (min-height: 601px) and (max-height: 800px) {
@@ -52,6 +58,12 @@ html, body {
         font-size: 16px;
         margin-bottom: 16px;
         text-align: justify;
+    }
+    .form-control {
+        font-size: 16px;
+    }
+    .result-container label {
+        font-size: 16px;
     }
 }
 
@@ -65,6 +77,14 @@ html, body {
         margin-bottom: 20px;
         text-align: justify;
     }
+    .form-control {
+        font-size: 18px;
+    }
+
+    .result-container label {
+        font-size: 18px;
+    }
+    
 }
 
 /* Feedback Paragraphs */
@@ -99,3 +119,45 @@ html, body {
     width: 8vh;
     height: auto;
 }
+
+
+.star-rating {
+    margin-bottom: 1.5vh;
+    font-size: 24px; /* Star size */
+    display: inline-block;
+    cursor: pointer;
+}
+
+.star {
+    color: #ddd; /* Unselected color */
+    transition: color 0.2s;
+}
+
+.star.selected {
+    color: gold; /* Selected color */
+}
+
+/* Add this section for styling the form textarea and submit button */
+.form-control {
+    padding: 1.5vh;
+    margin-bottom: 2vh;
+    border-radius: 1.5vh;
+    border: 1px solid #ddd;
+    width: 80%;
+}
+
+.btn-primary {
+    margin-top: 10vh;
+    padding: 2vh 4vw;
+    font-size: 2vh;
+    background-color: #9885ff;
+    color: white;
+    border: none;
+    border-radius: 1.5vh;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #7a6cd9;
+}
+

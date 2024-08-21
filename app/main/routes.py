@@ -562,48 +562,55 @@ def finish_chat(hr_id, interview_id, interview_parameter_id, session_id, applica
 
 @main.route('/applicant_review/<int:hr_id>/<int:interview_id>/<int:interview_parameter_id>/<int:session_id>/<int:applicant_id>', methods=['GET', 'POST'])
 def applicant_review(hr_id, interview_id, interview_parameter_id, session_id, applicant_id):
-    form = ReviewForm()
+    applicant = Applicant.query.get_or_404(applicant_id)
+    hr = HR.query.get_or_404(hr_id)
+    company = Company.query.get_or_404(hr.company_id)
     questions = [
         "How was the user experience with the AI interface?",
-        "How fluid is the conversation?",
-        "How pertinent were the questions?",]
-    
-    if not form.questions.entries:
-        for question_text in questions:
-            question_form = RatingForm()
-            form.questions.append_entry(question_form)
+        "How fluid was the conversation?",
+        "How pertinent were the questions?",
+    ]
 
-    if form.validate_on_submit():
-        review = Review(
-            session_id=session_id,
-            comment=form.comment.data
-        )
+    if request.method == 'POST':
+        # Retrieve the submitted ratings and comment
+        comment = request.form.get('comment')
+        ratings = [int(request.form.get(f'rating_{i}', 0)) for i in range(len(questions))]
+
+        # Save the review to the database
+        review = Review(session_id=session_id, comment=comment)
         db.session.add(review)
         db.session.commit()
-        for idx, question_form in zip(range(len(questions)), form.questions.entries):
+
+        # Save the ratings for each question
+        for idx, rating in enumerate(ratings):
             question = ReviewQuestion(
                 text=questions[idx],
-                rating=int(question_form.rating.data),
+                rating=rating,
                 review_id=review.id
             )
             db.session.add(question)
 
         db.session.commit()
+
         flash('Thank you for your feedback!', 'success')
-        return redirect(url_for('main.applicant_result',  
-                                hr_id = hr_id, 
-                                interview_id=interview_id, 
+        return redirect(url_for('main.applicant_result',
+                                hr_id=hr_id,
+                                interview_id=interview_id,
                                 interview_parameter_id=interview_parameter_id,
-                                session_id=session_id, 
-                                applicant_id = applicant_id))
-    return render_template('applicant/applicant_review.html', 
-                           form=form, 
-                           hr_id = hr_id,
-                           interview_id = interview_id,
-                           interview_parameter_id = interview_parameter_id,
-                           session_id=session_id, 
-                           applicant_id = applicant_id,
-                           questions=questions)
+                                session_id=session_id,
+                                applicant_id=applicant_id))
+    
+    return render_template('applicant/applicant_review.html',
+                           applicant = applicant,
+                           company = company,
+                           questions=questions,
+                           hr_id=hr_id,
+                           interview_id=interview_id,
+                           interview_parameter_id=interview_parameter_id,
+                           session_id=session_id,
+                           applicant_id=applicant_id,
+                           enumerate=enumerate)
+
 
 
 @main.route('/applicant_result/<int:hr_id>/<int:interview_id>/<int:interview_parameter_id>/<int:session_id>/<int:applicant_id>', methods=['GET'])

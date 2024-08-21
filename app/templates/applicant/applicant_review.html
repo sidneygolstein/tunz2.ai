@@ -3,26 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>Applicant Review</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/styles_applicant_result.css') }}">
+    <script>
+        // JavaScript function to handle star rating
+        function selectStar(rating, questionIndex) {
+            // Update the stars
+            const stars = document.querySelectorAll(`#question-${questionIndex} .star`);
+            stars.forEach((star, index) => {
+                star.classList.toggle('selected', index < rating);
+            });
+            // Update the hidden input with the selected rating value
+            document.getElementById(`rating-input-${questionIndex}`).value = rating;
+        }
+
+        // Function to validate ratings before form submission
+        function validateForm(event) {
+            let isValid = true;
+            const ratings = document.querySelectorAll('input[type="hidden"]');
+
+            ratings.forEach((rating) => {
+                if (parseInt(rating.value) === 0) {
+                    isValid = false;
+                }
+            });
+
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission
+                // Show a popup alert if validation fails
+                alert("Please rate the questions in order to access to your interview feedback.");
+            }
+        }
+    </script>
 </head>
 <body>
-    <h1>Review Your Interview</h1>
-    <p>Please fill out the survey below to see your interview feedback.</p>
-    <form method="POST" action="{{ url_for('main.applicant_review', hr_id = hr_id, interview_id = interview_id, interview_parameter_id = interview_parameter_id, session_id=session_id, applicant_id = applicant_id) }}">
-        {{ form.hidden_tag() }}
-        {% for idx in range(questions|length) %}
+    <div class="result-container">
+        <h2>Thank you {{applicant.name}} for joining the interview.</h2>
+        <!-- Added trophy emoticon -->
+        <p>🏆 Can you please fill out this survey? You will be able to access to your interview feedback as soon as you have done it.</p>
+        <form method="POST" action="{{ url_for('main.applicant_review', hr_id=hr_id, interview_id=interview_id, interview_parameter_id=interview_parameter_id, session_id=session_id, applicant_id=applicant_id) }}" onsubmit="validateForm(event)">
+            {% for idx, question in enumerate(questions) %}
+                <div>
+                    <label>{{ question }}</label><br>
+                    <div class="star-rating" id="question-{{ idx }}">
+                        <span class="star" onclick="selectStar(1, {{ idx }})">&#9733;</span>
+                        <span class="star" onclick="selectStar(2, {{ idx }})">&#9733;</span>
+                        <span class="star" onclick="selectStar(3, {{ idx }})">&#9733;</span>
+                        <span class="star" onclick="selectStar(4, {{ idx }})">&#9733;</span>
+                        <span class="star" onclick="selectStar(5, {{ idx }})">&#9733;</span>
+                    </div>
+                    <input type="hidden" name="rating_{{ idx }}" id="rating-input-{{ idx }}" value="0"> <!-- Default value of 0 (not rated) -->
+                </div>
+            {% endfor %}
             <div>
-                <label>{{ questions[idx] }}</label><br>
-                {{ form.questions[idx].rating(class_="form-control") }}
+                <!-- Added thinking emoticon -->
+                <p>🤔 Do you have any additional comments or recommendations that will help us improve your experience?</p><br>
+                <textarea name="comment" class="form-control" rows="2" columns="10"></textarea>
             </div>
-        {% endfor %}
-        <div>
-            <label>{{ form.comment.label }}</label>
-            {{ form.comment(class_="form-control") }}
+            <div>
+                <button type="submit" class="btn btn-primary">Get your feedback</button>
+            </div>
+        </form>
+        
+        <!-- Added powered by section -->
+        <div class="powered-by">
+            <img src="{{ url_for('static', filename='static/enhanced_tunz_logo_only.png') }}" alt="logo">
+            <div>Powered by Tunz.ai</div>
         </div>
-        <div>
-            {{ form.submit(class_="btn btn-primary") }}
-        </div>
-    </form>
+    </div>
 </body>
 </html>
