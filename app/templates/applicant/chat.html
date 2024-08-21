@@ -69,10 +69,10 @@
                     {% endfor %}
                     {% if is_finished %}
                     <div class="message-container assistant-container">
+                        <img src="{{ url_for('static', filename='static/andy.png') }}" alt="Andy" class="message-icon">
                         <div class="message assistant">
                             <p>{{ thank_you_message | replace('\n', '<br>') | safe }}</p>
                         </div>
-                        <img src="{{ url_for('static', filename='static/andy.png') }}" alt="Andy" class="message-icon">
                     </div>
                     {% endif %}
                 </div>                

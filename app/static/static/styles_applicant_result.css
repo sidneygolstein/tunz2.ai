@@ -1,0 +1,101 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%; /* Ensure the body takes the full height */
+    display: flex; /* Flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+}
+
+/* Result Container */
+.result-container {
+    background-color: #f6f6ff;
+    padding: 3vh 4vw; /* Adjusted padding for responsiveness */
+    border-radius: 1.5vh;
+    text-align: center;
+    width: 80vw; /* Responsive width */
+    max-width: 1200px; /* Maximum width */
+    min-height: 60vh; /* Minimum height */
+    color: #222222;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content within the container */
+    align-items: center; /* Center content horizontally */
+}
+
+/* Responsive font sizes based on viewport height */
+@media (max-height: 600px) {
+    .result-container h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    .result-container p {
+        font-size: 14px;
+        margin-bottom: 12px;
+        text-align: justify;
+    }
+}
+
+@media (min-height: 601px) and (max-height: 800px) {
+    .result-container h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    .result-container p {
+        font-size: 16px;
+        margin-bottom: 16px;
+        text-align: justify;
+    }
+}
+
+@media (min-height: 801px) {
+    .result-container h2 {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+    .result-container p {
+        font-size: 18px;
+        margin-bottom: 20px;
+        text-align: justify;
+    }
+}
+
+/* Feedback Paragraphs */
+.feedback p {
+    margin-bottom: 2vh; /* Space between feedback paragraphs */
+    text-align: justify;
+}
+
+/* Powered by section (if needed in future updates) */
+.powered-by {
+    margin-top: auto;
+    text-align: center;
+    font-size: 12px;
+    color: #222222;
+    margin-bottom: 2.5vh;
+}
+
+@media (max-height: 600px) {
+    .powered-by {
+        font-size: 12px;
+    }
+}
+
+@media (min-height: 801px) {
+    .powered-by {
+        font-size: 13px;
+    }
+}
+
+.powered-by img {
+    margin-top: 10vh;
+    width: 8vh;
+    height: auto;
+}

@@ -608,7 +608,10 @@ def applicant_review(hr_id, interview_id, interview_parameter_id, session_id, ap
 
 @main.route('/applicant_result/<int:hr_id>/<int:interview_id>/<int:interview_parameter_id>/<int:session_id>/<int:applicant_id>', methods=['GET'])
 def applicant_result(hr_id, interview_id, interview_parameter_id, session_id, applicant_id):
+    hr = HR.query.get_or_404(hr_id)
+    company = Company.query.get_or_404(hr.company_id)
     current_session_id = session_id
+    interview = Interview.query.get_or_404(interview_id)
     interview_parameter = InterviewParameter.query.get_or_404(interview_parameter_id)
     if not current_session_id:
         return redirect(url_for('main.home'))
@@ -627,7 +630,10 @@ def applicant_result(hr_id, interview_id, interview_parameter_id, session_id, ap
                             applicant_email=applicant_email, 
                             applicant_name=applicant_name, 
                             applicant_surname=applicant_surname, 
-                            applicant_id = applicant_id)
+                            applicant_id = applicant_id,
+                            company = company,
+                            interview = interview,
+                            enumerate=enumerate)
 
 
 

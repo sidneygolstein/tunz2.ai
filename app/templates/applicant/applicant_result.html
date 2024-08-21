@@ -3,16 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Interview Result</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='static/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/styles_applicant_result.css') }}">
 </head>
 <body>
     <div class="result-container">
-        <h2>Interview Result</h2>
-        <p>Thank you, {{applicant_name}} {{applicant_surname}}, for joining the interview. We will keep you in touch very soon. Here is your interview feedback:</p>
-        
+        <h2>Thank you {{applicant_name}} for joining the interview.</h2>
+        <p>The company will keep you in touch very soon. But first, here is the feedback of your interview with Andy for the {{interview.name}} position at {{company.name}}.</p>
         <!-- Display the feedback with proper paragraph breaks -->
         <div class="feedback">
-            {{ ("<p>" ~ applicant_feedback|replace('\n', '</p><p>') ~ "</p>")|safe }}
+            {% set emoticons = ['✉️', '✅', '💪', '🚀'] %}
+            {% for idx, paragraph in enumerate(applicant_feedback.split('\n\n')) %}
+                {% if idx < emoticons|length %}
+                    <p>{{ emoticons[idx] }} {{ paragraph }}</p>
+                {% else %}
+                    <p>{{ paragraph }}</p>
+                {% endif %}
+            {% endfor %}
+        </div>        
+        <div class="powered-by">
+            <img src="{{ url_for('static', filename='static/enhanced_tunz_logo_only.png') }}" alt="logo">
+            <div> Powered by Tunz.ai </div>
         </div>
     </div>
 </body>
