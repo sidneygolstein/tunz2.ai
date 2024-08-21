@@ -11,6 +11,7 @@ from flask_mail import Message
 from datetime import datetime
 from app.decorators import admin_required
 from sqlalchemy import func
+from helpers import get_url
 
 admin = Blueprint('admin', __name__)
 
@@ -95,10 +96,12 @@ def accept_account(hr_id):
     db.session.commit()
 
     # Send email to HR confirming account activation
-    msg = Message('Account Confirmed',
+    msg = Message('Tunz.ai Account Confirmation',
                   sender='noreply@tunz.ai',
                   recipients=[user.email])
-    msg.body = f'Your account has been confirmed by the admin. You can now login using your credentials. Login here: {url_for('auth.login', _external=True, _scheme='https')}'
+    url = get_url('auth.login')
+    # {url_for('auth.login', _external=True, _scheme='https')} 
+    msg.body = f'Hello {user.name}, \n\nWe have just confirmed your account! You are all set, lets get you started and create your first AI interviews to send to applicants!\nTo login, just go to: {url} \n\nThanks a lot! \nThe Tunz AI team'
     mail.send(msg)
     return redirect(url_for('admin.home', admin_id=admin_id))
 
