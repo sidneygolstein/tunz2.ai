@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <div class="dashboard smaller-font">
     <h2>{{interview_name}} position in the {{interview_parameters.industry}} industry</h2>
-    <h2> Detailed comparison for every applicants</h2>
+    <h2> Interview comparaisons for every applicants</h2>
     <div class="scrollable-table">
         <table id="comparison-table">
             <thead>
@@ -22,7 +22,7 @@
                     <th class="sortable" style="width: 10%;" onclick="sortTable(7, true)">Analytical Skills</th>
                     <th class="sortable" style="width: 10%;" onclick="sortTable(8, true)">Project Management and Prioritization</th>
                     <th class="sortable" style="width: 10%;" onclick="sortTable(9, true)">Overall Assessment</th>
-                    <th> </th>
+                    <th> Detail </th>
                 </tr>
             </thead>
             <tbody>
@@ -53,7 +53,7 @@
                         </td>
                         <td>
                             <a href="{{ url_for('main.session_details', hr_id=hr_id, session_id=session.id) }}" style="text-decoration: none;">
-                                <p><i class="fas fa-eye"></i> Details</p>
+                                🔍
                             </a>
                         </td>
                     </tr>

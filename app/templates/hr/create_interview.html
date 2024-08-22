@@ -7,12 +7,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 <div class="container">
-    <h1>Design Your Interview</h1>
+    <h1>🧑‍🎨 Design Your Interview</h1>
     <form id="create-interview-form" action="{{ url_for('main.create_interview', hr_id=hr_id) }}" method="POST">
 
         <div class="kpi-container">
             <div class="interview-param-box">
-                <label for="position"><strong>What is the job title?</strong></label>
+                <label for="position"><strong>🖌️ What is the job title?</strong></label>
                 <div>
                     <input type="text" id="position" name="position" placeholder="Enter the job title" required>
                 </div>
@@ -21,7 +21,7 @@
 
         <div class="kpi-container">
             <div class="interview-param-box">
-                <label for="language"> <strong>Select interview language </strong></label>
+                <label for="language"> <strong>🌍 Select interview language </strong></label>
                 <div class="select">
                     <select name="language" class="form-control" required>
                         <option value="English">English</option>
@@ -35,7 +35,7 @@
 
         <div class="kpi-container">
             <div class="interview-param-box">
-                <label for="duration"> <strong>Set interview duration </strong></label>
+                <label for="duration"> <strong>⏱️ Set interview duration </strong></label>
                 <div class="select">
                     <select name="duration" class="form-control" required>
                         <option value="1">1 minute</option>
@@ -53,7 +53,7 @@
 
         <div class="kpi-container">
             <div class="interview-param-box">
-                <label for="industry"><strong>Select relevant industry</strong></label>
+                <label for="industry"><strong>💻 Select relevant industry</strong></label>
                 <!-- Info icon with tooltip -->
                 <div class="info-icon" data-tooltip="Selecting an industry will enable our AI engine to tailor the interview scenario and assessment to be as relevant as possible for this position." data-position="right">
                     <i class="fas fa-info-circle"></i>
@@ -85,7 +85,7 @@
 
         <div class="kpi-container">
             <div class="interview-param-box">
-                <label for="subrole"><strong>Select role type</strong></label>
+                <label for="subrole"><strong>🧑‍💻 Select role type</strong></label>
                 <!-- Info icon with tooltip -->
                 <div class="info-icon" data-tooltip="Selecting a role type will enable our AI engine to tailor the interview scenario and assessment to be as relevant as possible for this position." data-position="right">
                     <i class="fas fa-info-circle"></i>
@@ -103,7 +103,7 @@
         <!-- Situation selection row -->
         <div class="kpi-container">
             <div class="interview-param-box">
-                <label for="situations"><strong>Select one or multiple interview scenarios</strong></label>
+                <label for="situations"><strong>🎯 Select one or multiple interview scenarios</strong></label>
                 <!-- Info icon with tooltip -->
                 <div class="info-icon" data-tooltip="Selecting one or multiple interview scenarios will enable you to ensure our AI engine generates sales simulations to test candidates that are the most relevant for what you are looking for." data-position="right">
                     <i class="fas fa-info-circle"></i>
@@ -122,7 +122,7 @@
         <!-- Criteria Ponderation Section -->
         <div class="criteria-container">
             <div class="interview-param-box">
-                <label for="criteria"><strong>(Optional) What is important for this role?</strong></label>
+                <label for="criteria"><strong>⭐ (Optional) What is important for this role?</strong></label>
                  <!-- Info icon with tooltip -->
                  <div class="info-icon" data-tooltip="Our AI scoring engine pre-set relative importance of 6 key criteria to evaluate applicants. You can adapt the importance of each criteria from less important (one star) to very important (5 stars) depending on what you are looking for in applicants for this role." data-position="right">
                     <i class="fas fa-info-circle"></i>
@@ -205,7 +205,7 @@
 
         <div class="kpi-container">
             <div class="selected-situations">
-                <label><strong>Selected Situations</strong></label>
+                <label><strong>✅ Selected Situations</strong></label>
                 <ul id="selected-situations">
                     <!-- Selected situations will be shown here -->
                 </ul>
@@ -214,7 +214,7 @@
 
         <!-- Create button -->
         <div class="create-button-container">
-            <button type="submit" class="btn btn-primary create-interview-btn" data-action="create-itw">Create Interview</button>
+            <button type="submit" class="btn btn-primary create-interview-btn" data-action="create-itw">✨ Create your AI interview</button>
         </div>
     </form>
 </div>

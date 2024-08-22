@@ -140,6 +140,7 @@ def create_interview(hr_id):
         role = "Sales"
         subrole = request.form['subrole']
         industry = request.form['industry']
+       
 
         if industry == "Other":
             industry = request.form.get('other_industry', '').strip()
@@ -190,8 +191,8 @@ def create_interview(hr_id):
         
         db.session.add(interview_parameter)
         db.session.commit()
-        interview_link = get_url('main.applicant_home', hr_id=hr_id, interview_parameter_id=interview_parameter.id)
-        return render_template('hr/interview_generated.html', interview_link=interview_link, hr_id=hr_id, interview_parameter=interview_parameter)
+        return redirect(url_for('main.interview_generated', interview_parameter_id=interview_parameter.id, hr_id=hr_id))
+        
     
     # Construct the correct file path to the JSON file
     #json_path = os.path.join(current_app.root_path, 'interview_situations.json')
@@ -204,6 +205,16 @@ def create_interview(hr_id):
 
     return render_template('hr/create_interview.html', hr_id=hr_id, interview_situations=interview_situations)
 
+
+@main.route('/interview_generated/<int:hr_id>/<int:interview_parameter_id>', methods=['GET'])
+def interview_generated(hr_id,interview_parameter_id):
+    interview_parameter = InterviewParameter.query.get_or_404(interview_parameter_id)
+    situation = json.loads(interview_parameter.situation)
+    interview = Interview.query.get(interview_parameter.interview_id)
+    hr = HR.query.get_or_404(hr_id)
+    interview_parameter = InterviewParameter.query.get_or_404(interview_parameter_id)
+    interview_link = get_url('main.applicant_home', hr_id=hr_id, interview_parameter_id=interview_parameter_id)
+    return render_template('hr/interview_generated.html', interview_link=interview_link, hr_id=hr_id, hr= hr, interview_parameter=interview_parameter, interview=interview, situation = situation)
 
 
 

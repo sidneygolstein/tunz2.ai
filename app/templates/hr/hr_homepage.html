@@ -7,26 +7,26 @@
     <script src="{{ url_for('static', filename='static/js/sort_table.js') }}" defer></script>
     <script src="{{ url_for('static', filename='static/js/details.js') }}"></script>
     <div class="text-center">
-        <h1>Welcome To Your Dashboard, {{ hr_name }} {{ hr_surname }}</h1>
+        <h1> 👋 Welcome to dashboard {{ hr_name }}</h1>
         <h2>Company: {{ company_name }}</h2>
-        <h2>My Overview</h2>
+        <h2> 📊 My Overview</h2>
     </div>
         <div class="kpi-container">
             <div class="kpi">
-                <h4>Total Interviews Created</h4>
+                <h4>📝 Total Interviews Created</h4>
                 <p>{{ total_interviews }}</p>
             </div>
             <div class="kpi">
-                <h4>Total Number of Sessions</h4>
+                <h4>🚀 Total Number of Sessions</h4>
                 <p>{{ total_sessions }}</p>
             </div>
             <div class="kpi">
-                <h4>Total Number of Applicants</h4>
+                <h4>👨‍💻 Total Number of Applicants</h4>
                 <p>{{ total_applicants }}</p>
             </div>
         </div>
     <div class="dashboard">
-        <h2>My Interviews</h2>
+        <h2> 💼 My Interviews</h2>
         <div class="scrollable-table">
         <div class="table-container">
             {% if interview_data %}
@@ -62,7 +62,7 @@
                         <td>{{ interview.duration }} min</td>
                         <td align="center">{{ interview.sessions_count }}</td>
                         <td>
-                            <button class="copy-link-btn" data-link="{{ get_url('main.applicant_home', hr_id=hr_id, interview_parameter_id=interview.interview_parameter_id) }}">
+                            <button class="copy-link-btn-dashboard" data-link="{{ get_url('main.applicant_home', hr_id=hr_id, interview_parameter_id=interview.interview_parameter_id) }}">
                                 <i class="fas fa-link"></i>
                             </button>                        
                         </td>                    
@@ -71,7 +71,7 @@
                 </tbody>
             </table>
             {% else %}
-            <p>You still have not created any interview.</p>
+            <p>🧑‍🎨 You still have not created any interview.</p>
             {% endif %}
         </div>
         </div>
@@ -79,7 +79,7 @@
 
     {% if interview_data %}
         <div class="dashboard">
-            <h2>My Interview Details</h2>
+            <h2>🔍 My Interview Details</h2>
             <div class="interview-details">
                 {% for interview in interview_data %}
                     {% if interview.sessions_count > 0 %}
@@ -96,7 +96,7 @@
                                             <th class="sortable">Email</th>
                                             <th class="sortable">Start Time</th>
                                             <th class="sortable" onclick="sortTableByMeanScore('{{ interview.interview_parameter_id }}')">Overall Assessment</th>
-                                            <th> </th>
+                                            <th> Details </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -118,7 +118,7 @@
                                                 </td>
                                                 <td>
                                                     <a href="{{ url_for('main.session_details', hr_id=hr_id, session_id=session.id) }}" style="text-decoration: none;">
-                                                        <p><i class="fas fa-eye"></i> Details</p>
+                                                        🔎
                                                     </a>
                                                 </td>
                                             </tr>
@@ -129,7 +129,7 @@
                             <!-- Centered Button -->
                             <div style="text-align: center; margin-top: 20px;">
                                 <a href="{{ url_for('main.comparison_details', hr_id=hr_id, interview_id = interview.interview_id) }}" class="comparison-button">
-                                    <i class="fas fa-eye"></i> Detailed comparison
+                                    🔎  Detailed comparison
                                 </a>
                             </div>
                         </div>
@@ -164,7 +164,7 @@
 
 
         document.addEventListener("DOMContentLoaded", function() {
-            const copyButtons = document.querySelectorAll('.copy-link-btn');
+            const copyButtons = document.querySelectorAll('.copy-link-btn-dashboard');
         
             copyButtons.forEach(button => {
                 button.addEventListener('click', function() {

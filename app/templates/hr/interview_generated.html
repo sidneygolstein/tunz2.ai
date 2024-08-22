@@ -1,37 +1,76 @@
 {% extends 'base_hr_authenticated.html' %}
-{% block title %}HR Homepage{% endblock %}
+{% block title %}Interview Generated{% endblock %}
 {% block content %}
 
 <link rel="stylesheet" href="{{ url_for('static', filename='static/styles.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
 <div class="container">
-    <h2>Interview Link Generated</h2>
-    <p>The interview link has been generated. Please copy the link below and send it to the applicant via email:</p>
+    <h2> ✨✨ Congratulations {{ hr.name }}, your AI interview is ready! ✨✨</h2>
+    <p>Your interview has been created. Here is a quick recap of the parameters you have just set: </p>
+    <form id="create-interview-form">
     
-    <div class="interview-details">
-        <h3>Interview Parameters</h3>
-        <ul>
-            <li><strong>Language:</strong> {{ interview_parameter.language }}</li>
-            <li><strong>Max Questions:</strong> {{ interview_parameter.max_questions }}</li>
-            <li><strong>Role:</strong> {{ interview_parameter.role }}</li>
-            <li><strong>Industry:</strong> {{ interview_parameter.industry }}</li>
-            <li><strong>Duration:</strong> {{ interview_parameter.duration }} minutes</li>
-        </ul>
+    <!-- KPI Section -->
+    <div class="kpi-container">
+        <div class="interview-param-box">
+            <strong>🖌️ Job Title</strong>
+            <p>{{ interview.name }}</p>
+        </div>
     </div>
-    
-    <div class="interview-link">
-        <input type="text" value="{{ interview_link }}" id="interviewLink" readonly>
-        <button onclick="copyToClipboard()">Copy Link</button>
+    <div class="kpi-container">
+        <div class="interview-param-box">
+            <h4>🌍 Language</h4>
+            <p>{{ interview_parameter.language }}</p>
+        </div>
     </div>
+    <div class="kpi-container">
+        <div class="interview-param-box">
+            <h4>⏱️ Duration</h4>
+            <p>{{ interview_parameter.duration }} minute(s)</p>
+        </div>
+    </div>
+    <div class="kpi-container">
+        <div class="interview-param-box">
+            <h4>💻 Industry</h4>
+            <p>{{ interview_parameter.industry }}</p>
+        </div>
+    </div>
+    <div class="kpi-container">
+        <div class="interview-param-box">
+            <h4>🧑‍💻 Role type</h4>
+            <p>{{ interview_parameter.subrole }}</p>
+        </div>
+    </div>
+    <div class="kpi-container">
+        <div class="interview-param-box">
+            <h4>🎯 Interview scenario(s)</h4>
+            <p>{{ situation | join(', ') }}</p>
+        </div>
+    </div>
+</form>
+</div>
+<!-- Interview Link Section -->
+<div class="interview-link-container" style="display: flex; justify-content: center;">
+    <button class="copy-link-btn" data-link="{{interview_link}}">
+        <i class="fas fa-link"></i> Copy this link to share your interview to applicants!
+    </button>              
 </div>
 
 <script>
-function copyToClipboard() {
-    var copyText = document.getElementById("interviewLink");
-    copyText.select();
-    copyText.setSelectionRange(0, 99999); // For mobile devices
-    document.execCommand("copy");
-    alert("Interview link copied to clipboard");
-}
+    document.addEventListener("DOMContentLoaded", function() {
+        const copyButtons = document.querySelectorAll('.copy-link-btn');
+    
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const link = this.getAttribute('data-link');
+                navigator.clipboard.writeText(link).then(() => {
+                    alert('Interview link copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            });
+        });
+    });
 </script>
+
 {% endblock %}

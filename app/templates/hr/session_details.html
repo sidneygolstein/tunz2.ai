@@ -114,13 +114,13 @@
     <h2>{{interview.name}} position in the {{interview_parameter.industry}} industry</h2>
     <div class="info-columns">
         <div class="info-item">
-            <p><strong>Name & Surname:</strong> {{ applicant.name }} {{ applicant.surname }}</p>
+            <p><strong>🧑‍🔧 Name & Surname:</strong> {{ applicant.name }} {{ applicant.surname }}</p>
         </div>
         <div class="info-item">
-            <p><strong>Interview Duration:</strong> {{ interview_parameter.duration }} minute(s)</p>
+            <p><strong>⏱️ Interview Duration:</strong> {{ interview_parameter.duration }} minute(s)</p>
         </div>
         <div class="info-item">
-            <p><strong>Situation(s) Chosen for the Interview</strong> 
+            <p><strong>🎯 Scenario(s) Chosen for the Interview</strong> 
                     {% for situation in interview_parameter.get_situations() %}
                     {{ situation }}
                     {% endfor %}
@@ -129,19 +129,19 @@
     </div>
     <div class="info-columns">
         <div class="info-item">
-            <p><strong>Email:</strong> {{ applicant.email_address }}</p>
+            <p><strong>✉️ Email:</strong> {{ applicant.email_address }}</p>
         </div>
         <div class="info-item">
-            <p><strong>Start Time:</strong> {{ session.start_time.strftime('%d-%m-%Y at %H:%M') }}</p>
+            <p><strong>📆 Start Time:</strong> {{ session.start_time.strftime('%d-%m-%Y at %H:%M') }}</p>
         </div>
         <div class="info-item">
-            <p><strong>Industry:</strong> {{ interview_parameter.industry }} </p>
+            <p><strong>💻 Industry:</strong> {{ interview_parameter.industry }} </p>
         </div>
     </div>
     
     <div class="title-container">
         <div class="conversation-box">
-            <h3>Overall Assessment</h3>
+            <h3>📊 Overall Assessment</h3>
             <div style="display: flex; align-items: center;">
                 <span class="stars">
                     <strong>{{ score_interview.overall_assessment }}:</strong> 
@@ -154,11 +154,11 @@
     <div class="title-container">
         <div class="radar-container">
             <div class="radar-chart-box">
-                <h3>Detailed Assessment</h3>
+                <h3>🔍 Detailed Assessment</h3>
                 <canvas id="radarChart" style="max-height: 400px;"></canvas> <!-- Adjusted height -->
             </div>
             <div class="criteria-explanations-box">
-                <h3>Rationale</h3>
+                <h3>🤔 Rationale</h3>
                 <ul>
                     {% for criteria, explanation in score_interview.criteria_explanation.items() %}
                     <li><strong>{{ criteria.replace('_', ' ').title() }}:</strong> {{ explanation }}</li>
@@ -171,7 +171,7 @@
     <div class="title-container">
         <div class="pros-cons">
             <div class="pros">
-                <h3>What the applicant did well</h3>
+                <h3>🙌 What the applicant did well</h3>
                 <ul class="pros-cons-list">
                     {% for pro in score_interview.interview_pros.split(';') %}
                         {% if pro %}
@@ -181,7 +181,7 @@
                 </ul>
             </div>
             <div class="cons">
-                <h3>What the applicant could improve</h3>
+                <h3>💪 What the applicant could improve</h3>
                 <ul class="pros-cons-list">
                     {% for con in score_interview.interview_cons.split(';') %}
                         {% if con %}
@@ -194,7 +194,7 @@
     </div>
 
     <div class="title-container">
-        <h3>Interview Transcript</h3>
+        <h3>📝 Interview Transcript</h3>
         <div class="conversation-box">
             <ul>
                 {% for item in conversation %}
@@ -209,7 +209,7 @@
     </div>
 
     <div class="title-container">
-        <h3>Criteria used to score the interview with their relative importance</h3>
+        <h3>⭐ Criteria used to score the interview with their relative importance</h3>
         <div class="title-box">
             <ul class="criteria-grid">
                 {% for criteria, importance in criteria_importance %}

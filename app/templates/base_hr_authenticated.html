@@ -10,10 +10,10 @@
     <div class="sidebar">
         <h2>Menu</h2>
         <div class="sidebar-top">
-            <a href="{{ url_for('main.home', hr_id=hr_id) }}"><i class="fas fa-home"></i> Home</a>
-            <a href="{{ url_for('main.create_interview', hr_id=hr_id) }}"><i class="fas fa-plus-circle"></i> Create New Interview</a>
+            <a href="{{ url_for('main.home', hr_id=hr_id) }}">🏠</i> Home</a>
+            <a href="{{ url_for('main.create_interview', hr_id=hr_id) }}">🌟</i> Create New Interview</a>
         </div>
-        <a href="{{ url_for('auth.logout') }}" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a href="{{ url_for('auth.logout') }}" class="logout">🖐️</i> Logout</a>
         <!-- Tunz.ai Branding Section -->
         <div class="tunz-branding">
             <img src="{{ url_for('static', filename='static/enhanced_tunz_logo_only.png') }}" alt="Tunz.ai Logo">

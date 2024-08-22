@@ -297,6 +297,49 @@ tbody tr {
 
 
 
+.copy-link-btn {
+    align-items: center;
+    padding: 0.7vh 1vw;
+    background-color: #050090;
+    color: white;
+    border: none;
+    border-radius: 1.5vh;
+    cursor: pointer;
+    font-size: 1em;
+    display: inline-flex;
+    align-items: center;
+}
+
+.copy-link-btn i {
+    margin-right: 0.5vw;
+}
+
+.copy-link-btn:hover {
+    background-color: #515bd4;
+}
+
+
+.copy-link-btn-dashboard {
+    padding: 0.5vh 0.5vw;
+    background-color: #050090;
+    color: white;
+    border: none;
+    border-radius: 0.4vh;
+    cursor: pointer;
+    font-size: 0.5em;
+    display: inline-flex;
+    align-items: center;
+}
+
+.copy-link-btn-dashboard i {
+    margin-right: 0.5vw;
+}
+
+.copy-link-btn-dashboard:hover {
+    background-color: #515bd4;
+}
+
+
 
 /* BACK HOME BUTTON STYLES */
 
