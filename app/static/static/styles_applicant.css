@@ -59,22 +59,22 @@ html, body {
     width: 100%;
 }
 
-.instructions h2 {
+.instructions h3 {
     text-align: center;
-    font-size: 22px; /* Fixed base font size */
+    font-size: 20px; /* Fixed base font size */
     margin-bottom: 1.5vh;
     margin-top: 1.5vh;
 }
 
 @media (max-height: 600px) {
-    .instructions h2 {
-        font-size: 18px; /* Adjusted for smaller screens */
+    .instructions h3 {
+        font-size: 16px; /* Adjusted for smaller screens */
     }
 }
 
 @media (min-height: 801px) {
-    .instructions h2 {
-        font-size: 24px; /* Adjusted for larger screens */
+    .instructions h3 {
+        font-size: 22px; /* Adjusted for larger screens */
     }
 }
 
@@ -101,7 +101,7 @@ html, body {
     margin-top: 1vh;
     border: 1px solid #ddd;
     border-radius: 1.5vh;
-    width: 60%;
+    width: 20%;
 }
 
 .applicant-container input::placeholder {
@@ -118,7 +118,7 @@ html, body {
     border-radius: 1.5vh;
     cursor: pointer;
     margin-top: 3.5vh;
-    width: 40%;
+    width: 15%;
     font-size: 1.6vh;
 }
 
@@ -130,20 +130,20 @@ html, body {
 .powered-by {
     margin-top: auto;
     text-align: center;
-    font-size: 16px; /* Fixed base font size */
+    font-size: 12px; /* Fixed base font size */
     color: #222222;
     margin-bottom: 2.5vh;
 }
 
 @media (max-height: 600px) {
     .powered-by {
-        font-size: 14px; /* Adjusted for smaller screens */
+        font-size: 12px; /* Adjusted for smaller screens */
     }
 }
 
 @media (min-height: 801px) {
     .powered-by {
-        font-size: 18px; /* Adjusted for larger screens */
+        font-size: 14px; /* Adjusted for larger screens */
     }
 }
 

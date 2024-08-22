@@ -343,7 +343,7 @@ def applicant_home(hr_id, interview_parameter_id):
 
         # Server-side validation
         if not name or not surname or not email:
-            error_message = "All fields are required to start the interview."
+            error_message = ""
         else:
             new_applicant = Applicant(name=name, surname=surname, email_address=email)
             db.session.add(new_applicant)

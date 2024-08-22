@@ -2,13 +2,13 @@
 {% block title %}Applicant Home{% endblock %}
 {% block content %}
 
-<h1>Welcome!</h1>
+<h1>👋 Welcome!</h1>
 <p>Thank you for your application to join <strong>{{ company_name }}</strong> for the <strong>{{ interview.name }}</strong> position. We are very excited to meet you and learn more about who you are and your awesome skills!</p>
 <p>Your first round interview will consist in a short conversation with our innovative AI-based interviewer. The interview will be centered around real-life situational-based questions to test your sales skills in a practical and fun way!</p>
-<p>Please read the following instructions carefully before starting the interview! Good luck!</p>
+<p>Please read the following instructions carefully before starting the interview! Good luck! 🍀</p>
 
 <div class="instructions">
-    <h2>Instructions:</h2>
+    <h3>📚 Instructions:</h3>
     <ul>
         <li>Please be specific in your answers and clearly explain your thinking. There are no right or wrong answers; the objective is to understand how you think about certain problems & solutions and what steps you would take to solve particular problems.</li>
         <li>Please note that each answer you provide will be considered final when you submit it after clicking on “send”. Thus, please ensure you provide your complete answer in one message/block.</li>
@@ -17,7 +17,7 @@
         <li>After the interview is finished you will be asked to provide some short feedback about the experience and you will then be able to get initial feedback about your performance on the interview. This will help you understand what you did great and what you can improve for future rounds!</li>
     </ul>
 
-<h2>Before starting, please carefully fill the following infos:</h2>
+<h3>📝 Before starting, please carefully fill the following infos:</h3>
 </div>
 <!-- Display the error message if it exists -->
 {% if error_message %}
@@ -25,31 +25,88 @@
         {{ error_message }}
     </div>
 {% endif %}
-<form action="{{ url_for('main.applicant_home', hr_id=hr_id, interview_parameter_id=interview_parameter_id) }}" method="POST">
+<form id="start-interview-form" action="{{ url_for('main.applicant_home', hr_id=hr_id, interview_parameter_id=interview_parameter_id) }}" method="POST">
     <label for="name"></label>
     <input type="text" id="name" name="name" placeholder="Please enter your name" required>
     <label for="surname"></label>
     <input type="text" id="surname" name="surname" placeholder="Please enter your surname" required>
     <label for="email"></label>
     <input type="email" id="email" name="email" placeholder="Please enter your email" required>
-    <button type="submit" class="btn btn-primary start-interview-btn" data-action="start-itw">Start Interview</button>
+    <button type="submit" class="btn btn-primary start-interview-btn" id="start-interview-btn" data-action="start-itw">Start Interview</button>
 </form>
 
 <div class="powered-by">
     <img src="{{ url_for('static', filename='static/enhanced_tunz_logo_only.png') }}" alt="logo">
-    <h5>Powered by Tunz.ai</h5>
+    <div>Powered by Tunz.ai</div>
 </div>
-
 
 <!-- Confirmation Modal -->
 <div id="confirmation-modal" class="modal">
     <div class="modal-content">
-        <p id="confirmation-message">Are you sure you want to create this interview?</p>
+        <p id="confirmation-message">Are you sure you want to start this interview?</p>
         <button id="confirm-yes">Yes</button>
         <button id="confirm-no">No</button>
     </div>
 </div>
+
+<!-- Loading Modal -->
+<div id="loading-modal" class="modal">
+    <div class="modal-content">
+        <p>⏳ Your interview is loading, please wait...⏳</p>
+    </div>
+</div>
+
+<!-- Validation Modal -->
+<div id="validation-modal" class="modal">
+    <div class="modal-content">
+        <p>Please fill out all the fields before starting the interview.</p>
+        <button id="validation-ok">OK</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const startInterviewBtn = document.getElementById('start-interview-btn');
+        const form = document.getElementById('start-interview-form');
+        const confirmationModal = document.getElementById('confirmation-modal');
+        const loadingModal = document.getElementById('loading-modal');
+        const validationModal = document.getElementById('validation-modal');
+        const confirmYes = document.getElementById('confirm-yes');
+        const confirmNo = document.getElementById('confirm-no');
+        const validationOk = document.getElementById('validation-ok');
+
+        // Open the confirmation modal when clicking on Start Interview
+        startInterviewBtn.addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent form submission
+
+            // Check if all fields are filled
+            if (!form.checkValidity()) {
+                validationModal.style.display = 'block';  // Show validation modal if fields are missing
+                confirmationModal.style.display = 'none';  // Hide validation modal
+            } else {
+                confirmationModal.style.display = 'block';  // Show confirmation modal if form is valid
+            }
+        });
+
+        // Close validation modal on OK click
+        validationOk.addEventListener('click', function() {
+            validationModal.style.display = 'none';  // Hide validation modal
+        });
+
+        // Handle confirmation modal actions
+        confirmYes.addEventListener('click', function() {
+            startInterviewBtn.disabled = true; // Disable the start button
+            confirmationModal.style.display = 'none';  // Hide confirmation modal
+            loadingModal.style.display = 'block';  // Show loading modal
+            form.submit();  // Submit the form
+        });
+
+        confirmNo.addEventListener('click', function() {
+            confirmationModal.style.display = 'none';  // Hide confirmation modal
+        });
+    });
+</script>
+
+
+
 {% endblock %}
-
-
-
