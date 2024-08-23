@@ -62,10 +62,13 @@
                         <td>{{ interview.duration }} min</td>
                         <td align="center">{{ interview.sessions_count }}</td>
                         <td>
-                            <button class="copy-link-btn-dashboard" data-link="{{ get_url('main.applicant_home', hr_id=hr_id, interview_parameter_id=interview.interview_parameter_id) }}">
-                                <i class="fas fa-link"></i>
-                            </button>                        
-                        </td>                    
+                            <span 
+                                style="cursor: pointer; text-decoration: none;" 
+                                onclick="copyToClipboard('{{ get_url('main.applicant_home', hr_id=hr_id, interview_parameter_id=interview.interview_parameter_id) }}')"
+                                title="Copy link to clipboard">
+                                🔗
+                            </span>
+                        </td>      
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -163,20 +166,24 @@
         }
 
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const copyButtons = document.querySelectorAll('.copy-link-btn-dashboard');
+        function copyToClipboard(url) {
+            // Create a temporary input element to store the URL
+            var tempInput = document.createElement('input');
+            tempInput.style.position = 'absolute';  // Prevent it from affecting layout
+            tempInput.style.left = '-9999px';       // Move it off-screen
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
         
-            copyButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const link = this.getAttribute('data-link');
-                    navigator.clipboard.writeText(link).then(() => {
-                        alert('Link copied to clipboard!');
-                    }).catch(err => {
-                        console.error('Failed to copy: ', err);
-                    });
-                });
-            });
-        });
+            // Select the input content and copy it
+            tempInput.select();
+            document.execCommand('copy');
+        
+            // Remove the temporary input element
+            document.body.removeChild(tempInput);
+        
+            // Optionally, you can add a visual confirmation (e.g., alert or toast)
+            alert('Link copied to clipboard!');
+        }
         
     </script>
     
