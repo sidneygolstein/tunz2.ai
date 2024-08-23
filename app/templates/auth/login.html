@@ -5,7 +5,7 @@
 {% block content %}
     <h2>👋 WELCOME TO TUNZ</h2>
     <h2>Please Login</h2>
-    <form action="{{ url_for('auth.login') }}" method="POST">
+    <form id="login-form">
         <input type="email" id="email" name="email" placeholder="Enter your email" required>
         <input type="password" id="password" name="password" placeholder="Enter your password" required>
         <a href="{{ url_for('auth.request_reset_password') }}" class="forgot-password-link">Forgot Password?</a>
@@ -18,4 +18,30 @@
         <p>Powered by Tunz.ai</p>
         <img src="{{ url_for('static', filename='static/enhanced_tunz_logo_only.png') }}" alt="Tunz.ai Logo">
     </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('{{ url_for('auth.login') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // On successful login, redirect the user
+                window.location.href = data.redirect_url;
+            } else {
+                // Display the error message as a popup
+                alert(data.msg);
+            }
+        });
+    </script>
 {% endblock %}
