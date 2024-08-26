@@ -30,7 +30,13 @@ class Config:
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
-    JWT_TOKEN_LOCATION = ['headers']
+    from datetime import timedelta
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)  # Set token expiration time
+    JWT_TOKEN_LOCATION = ["cookies"]
+    JWT_COOKIE_SECURE = True  # Enable this for HTTPS only
+    JWT_COOKIE_CSRF_PROTECT = True  # CSRF protection
+
+
 
 
     

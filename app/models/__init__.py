@@ -11,3 +11,5 @@ from .review import Review
 from .review_question import ReviewQuestion
 from .admin import Admin  # Add this line
 from .thread import Thread
+from .revoked_token import RevokedToken
+

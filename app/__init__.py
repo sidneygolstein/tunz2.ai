@@ -5,14 +5,18 @@ from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import Config
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail, Message
 from markupsafe import Markup
 
+
 db = SQLAlchemy(session_options={"autoflush": False})
 jwt = JWTManager()
+# Customize what happens when a user is not authorized
+
+
 migrate = Migrate()
 mail = Mail()
 bcrypt = Bcrypt()
@@ -26,7 +30,6 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
-    bcrypt.init_app(app)
     mail.init_app(app)
 
     @app.template_filter('nl2br')
@@ -46,7 +49,11 @@ def create_app():
 
 
         # Import models
-        from .models import answer, applicant, company, hr, interview_parameter, interview, question, result, session, review, review_question, admin
-
+        from .models import answer, applicant, company, hr, interview_parameter, interview, question, result, session, review, review_question, admin, RevokedToken
+        # Token revocation check
+        @jwt.token_in_blocklist_loader
+        def check_if_token_revoked(jwt_header, jwt_payload):
+            jti = jwt_payload["jti"]
+            return RevokedToken.is_jti_blacklisted(jti)
     return app
 

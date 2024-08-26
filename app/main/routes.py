@@ -7,7 +7,7 @@ from flask import render_template, request, redirect, url_for, jsonify, session,
 from .. import db, mail
 from ..models import Interview, InterviewParameter, Session, Question, Answer, Result, HR, Applicant, Company, Review, ReviewQuestion, Thread 
 from ..openai_utils import create_openai_thread, get_openai_thread_response, get_thank_you_message, create_scoring_thread
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, set_access_cookies
 from ..forms import ReviewForm, RatingForm
 from flask import Blueprint
 from datetime import datetime
@@ -39,10 +39,15 @@ def get_interview_conversation(session_id):
 
 
 
-######### HR ROUTES 
 
+######### HR ROUTES 
 @main.route('/home/<int:hr_id>')
+@jwt_required()
 def home(hr_id):
+    current_user = get_jwt_identity()  # Retrieve the user identity from the JWT
+    if current_user["hr_id"] != hr_id:  # Ensure the JWT identity matches the requested hr_id
+        return jsonify({"msg": "Unauthorized access."}), 403
+    
     hr = HR.query.get_or_404(hr_id)
     if not hr:
         return redirect(url_for('auth.login'))
@@ -132,6 +137,7 @@ def home(hr_id):
 
 
 @main.route('/create_interview/<int:hr_id>', methods=['GET', 'POST'])
+@jwt_required()
 def create_interview(hr_id):
     if request.method == 'POST':
         language = request.form['language']
@@ -205,8 +211,8 @@ def create_interview(hr_id):
 
     return render_template('hr/create_interview.html', hr_id=hr_id, interview_situations=interview_situations)
 
-
 @main.route('/interview_generated/<int:hr_id>/<int:interview_parameter_id>', methods=['GET'])
+@jwt_required()
 def interview_generated(hr_id,interview_parameter_id):
     interview_parameter = InterviewParameter.query.get_or_404(interview_parameter_id)
     situation = json.loads(interview_parameter.situation)
@@ -217,8 +223,8 @@ def interview_generated(hr_id,interview_parameter_id):
     return render_template('hr/interview_generated.html', interview_link=interview_link, hr_id=hr_id, hr= hr, interview_parameter=interview_parameter, interview=interview, situation = situation)
 
 
-
 @main.route('/session_details/<int:hr_id>/<int:session_id>', methods=['GET'])
+@jwt_required()
 def session_details(hr_id, session_id):
     session = Session.query.get(session_id)
     if not session:
@@ -227,6 +233,9 @@ def session_details(hr_id, session_id):
 
     applicant = Applicant.query.get_or_404(session.applicant_id)
     questions = Question.query.filter_by(session_id=session_id).all()
+    answers = Answer.query.filter_by(session_id=session_id).all()
+    nb_questions = len(questions)
+    nb_answers = len(answers)
     result = Result.query.filter_by(session_id=session_id).first()
     interview_parameter = InterviewParameter.query.get(session.interview_parameter_id)
     interview = Interview.query.get(interview_parameter.interview_id)
@@ -282,11 +291,13 @@ def session_details(hr_id, session_id):
                            result=result,
                            interview_parameter=interview_parameter,
                            interview = interview,
-                           score_interview = score_interview,)
-
+                           score_interview = score_interview,
+                           nb_answers = nb_answers,
+                           nb_questions = nb_questions)
 
 
 @main.route('/comparison_details/<int:hr_id>/<int:interview_id>', methods=['GET'])
+@jwt_required()
 def comparison_details(hr_id, interview_id):
     hr = HR.query.get_or_404(hr_id)
     interview = Interview.query.get_or_404(interview_id)
@@ -297,6 +308,8 @@ def comparison_details(hr_id, interview_id):
     for session in sessions:
         applicant = Applicant.query.get(session.applicant_id)
         result = Result.query.filter_by(session_id=session.id).first()
+        nb_answers = len(Answer.query.filter_by(session_id=session.id).all())
+        nb_questions = len(Question.query.filter_by(session_id=session.id).all())
         
         if result and result.score_interview:
             criteria_score = result.score_interview.get("criteria_score")
@@ -308,6 +321,8 @@ def comparison_details(hr_id, interview_id):
                     'applicant_email': applicant.email_address,
                     'criteria_scores': criteria_score,
                     'mean_score': mean_score,
+                    'nb_questions':nb_questions,
+                    'nb_answers':nb_answers,
                     'id': session.id  # Add session id here
                 
                 })
@@ -479,15 +494,6 @@ def chat(hr_id, interview_id, interview_parameter_id, session_id, applicant_id):
             db.session.commit()
 
         # STILL NEED TO BE ENHANCED: WHEN THE SESSION IS FINISHED? NOT POSSIBLE TO COME BACK
-        """
-        if current_session.finished:
-            return  redirect(url_for('main.applicant_review', 
-                                    hr_id=hr_id, 
-                                    interview_id=interview_id, 
-                                    interview_parameter_id=interview_parameter_id, 
-                                    session_id=session_id,
-                                    applicant_id=applicant_id))
-        """
 
         return redirect(url_for('main.chat', 
                             hr_id=hr_id, 

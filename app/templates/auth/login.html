@@ -21,27 +21,30 @@
 
     <script>
         document.getElementById('login-form').addEventListener('submit', async (event) => {
-            event.preventDefault();
+            event.preventDefault();  // Prevent the default form submission behavior
+        
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-
-            const response = await fetch('{{ url_for('auth.login') }}', {
+        
+            const response = await fetch('{{ url_for("auth.login") }}', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',  // Ensure you're sending JSON
                 },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password })  // Convert form data to JSON string
             });
-
+        
             const data = await response.json();
-
+        
             if (response.ok) {
+                // Store the token in local storage
+                localStorage.setItem('access_token', data.access_token);
                 // On successful login, redirect the user
                 window.location.href = data.redirect_url;
             } else {
                 // Display the error message as a popup
                 alert(data.msg);
             }
-        });
+        });        
     </script>
 {% endblock %}

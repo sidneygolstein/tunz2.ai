@@ -114,13 +114,13 @@
     <h2>{{interview.name}} position in the {{interview_parameter.industry}} industry</h2>
     <div class="info-columns">
         <div class="info-item">
-            <p><strong>🧑‍🔧 Name & Surname:</strong> {{ applicant.name }} {{ applicant.surname }}</p>
+            <p><strong>📝 Basic Informations:</strong> {{ applicant.name }} {{ applicant.surname }}, {{ applicant.email_address }}</p>
         </div>
         <div class="info-item">
             <p><strong>⏱️ Interview Duration:</strong> {{ interview_parameter.duration }} minute(s)</p>
         </div>
         <div class="info-item">
-            <p><strong>🎯 Scenario(s) Chosen for the Interview</strong> 
+            <p><strong>🎯 Scenario(s) chosen for the interview:</strong> 
                     {% for situation in interview_parameter.get_situations() %}
                     {{ situation }}
                     {% endfor %}
@@ -129,7 +129,7 @@
     </div>
     <div class="info-columns">
         <div class="info-item">
-            <p><strong>✉️ Email:</strong> {{ applicant.email_address }}</p>
+            <p><strong>💬 Number of provided answers:</strong> {{ nb_answers }}</p>
         </div>
         <div class="info-item">
             <p><strong>📆 Start Time:</strong> {{ session.start_time.strftime('%d-%m-%Y at %H:%M') }}</p>
@@ -194,7 +194,7 @@
     </div>
 
     <div class="title-container">
-        <h3>📝 Interview Transcript</h3>
+        <h3>📚 Interview Transcript</h3>
         <div class="conversation-box">
             <ul>
                 {% for item in conversation %}

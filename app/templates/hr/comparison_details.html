@@ -21,7 +21,8 @@
                     <th class="sortable" style="width: 10%;" onclick="sortTable(6, true)">Business Acumen</th>
                     <th class="sortable" style="width: 10%;" onclick="sortTable(7, true)">Analytical Skills</th>
                     <th class="sortable" style="width: 10%;" onclick="sortTable(8, true)">Project Management and Prioritization</th>
-                    <th class="sortable" style="width: 10%;" onclick="sortTable(9, true)">Overall Assessment</th>
+                    <th class="sortable" style="width: 10%;" onclick="sortTable(9, true)">Provided Answers</th>
+                    <th class="sortable" style="width: 10%;" onclick="sortTable(10, true)">Overall Assessment</th>
                     <th> Detail </th>
                 </tr>
             </thead>
@@ -42,6 +43,7 @@
                                 </div>
                             </td>
                         {% endfor %}
+                        <td>{{ session.nb_answers }}</td>
                         <td data-value="{{ session.mean_score }}">
                             <div class="progress">
                                 <div class="progress-bar" role="progressbar" 
