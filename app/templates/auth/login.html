@@ -19,6 +19,23 @@
         <img src="{{ url_for('static', filename='static/enhanced_tunz_logo_only.png') }}" alt="Tunz.ai Logo">
     </div>
 
+    <!-- Flash messages handling -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    {% for category, message in messages %}
+                        alert("{{ message }}");  // Popup the flash message as an alert
+                    {% endfor %}
+                    // Optionally, redirect after showing the alert
+                    setTimeout(function() {
+                        window.location.href = "{{ url_for('auth.login') }}";
+                    }, 1000);  // Adjust the timeout as needed
+                });
+            </script>
+        {% endif %}
+    {% endwith %}
+
     <script>
         document.getElementById('login-form').addEventListener('submit', async (event) => {
             event.preventDefault();  // Prevent the default form submission behavior

@@ -103,7 +103,7 @@ def accept_account(hr_id):
                   recipients=[user.email])
     url = get_url('auth.login')
     # {url_for('auth.login', _external=True, _scheme='https')} 
-    msg.body = f'Hello {user.name}, \n\nWe have just confirmed your account! You are all set, lets get you started and create your first AI interviews to send to applicants!\nTo login, just go to: {url} \n\nThanks a lot! \nThe Tunz AI team'
+    msg.body = f'👋 Hello {user.name}, \n\nWe have just confirmed your account! You are all set, lets get you started and create your first AI interviews to send to applicants!\nTo login, just go to: {url} \n\nThanks a lot! \nThe Tunz AI Team.'
     mail.send(msg)
     return redirect(url_for('admin.home', admin_id=admin_id))
 
@@ -124,9 +124,8 @@ def deny_account(hr_id):
     msg = Message('Account Denied',
                   sender='noreply@tunz.ai',
                   recipients=[user.email])
-    msg.body = f'Your account has been denied by the admin. You cannot login. If you have any question, please contact: sidney@tunz.ai or sebastien@tunz.ai .'
+    msg.body = f'👋  Hello {user.name}, \n\n Unfortunatelly, your account has been denied by the admin so you cannot login using your credentials. If you have any question, please contact: sidney@tunz.ai or sebastien@tunz.ai. \n\n The Tunz AI Team.'
     mail.send(msg)
-
     db.session.delete(user)
     db.session.commit()
 

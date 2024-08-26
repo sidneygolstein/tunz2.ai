@@ -10,6 +10,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail, Message
 from markupsafe import Markup
+from flask import jsonify, redirect, url_for, flash, make_response
 
 
 db = SQLAlchemy(session_options={"autoflush": False})
@@ -55,5 +56,34 @@ def create_app():
         def check_if_token_revoked(jwt_header, jwt_payload):
             jti = jwt_payload["jti"]
             return RevokedToken.is_jti_blacklisted(jti)
+        
+        # Handle missing token
+        @jwt.unauthorized_loader
+        def unauthorized_loader_callback(error):
+            # Redirect to login page with an alert message
+            response = make_response(redirect(url_for('auth.login')))
+            flash('⛔ Your are not authorized to access this page. Please log in again.', 'error')
+            return response
+
+        # Handle expired token
+        @jwt.expired_token_loader
+        def expired_token_callback(jwt_header, jwt_payload):
+            response = make_response(redirect(url_for('auth.login')))
+            flash('⛔ Your session has expired. Please log in again.', 'error')
+            return response
+
+        # Handle invalid token
+        @jwt.invalid_token_loader
+        def invalid_token_callback(error):
+            response = make_response(redirect(url_for('auth.login')))
+            flash('⛔ Your token is invalid. Please log in again.', 'error')
+            return response
+
+        # Handle revoked token
+        @jwt.revoked_token_loader
+        def revoked_token_callback(jwt_header, jwt_payload):
+            response = make_response(redirect(url_for('auth.login')))
+            flash('⛔ Your session has been revoked. Please log in again.', 'error')
+            return response
     return app
 

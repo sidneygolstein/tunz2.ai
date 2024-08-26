@@ -53,7 +53,7 @@
 
         const data = await response.json();
         if (response.ok) {
-            alert('Registration successful: Pending admin approval. You will receive an email when your registration is validated.');
+            alert('✅ Registration successful: Pending admin approval. You will receive an email when your registration is validated.');
             window.location.href = '{{ url_for('auth.login') }}';
         } else {
             alert(data.msg);
