@@ -316,15 +316,41 @@ def admin_login():
         admin = Admin.query.filter_by(email=email).first()
 
         if admin and admin.check_password(password):
-            session['admin_id'] = admin.id  # Store admin_id in session
-            session['admin_email'] = admin.email
-            return redirect(url_for('admin.home'))
-        else:
-            return jsonify({"msg": "Invalid credentials"}), 401
+            # Create a JWT token for the admin
+            access_token = create_access_token(identity={"admin_id": admin.id})
+            
+            # Create a response to return the rendered template or redirect
+            response = make_response(redirect(url_for('admin.home')))
+            
+            # Store the JWT token in an HTTP-only cookie
+            response.set_cookie('access_token_cookie', access_token, httponly=True, secure=True)
+            
+            return response
+        
+        # If credentials are invalid, return an error message
+        return jsonify({"msg": "Invalid credentials"}), 401
+    
     return render_template('auth/admin_login.html')
 
 
-# To be enhanced with jwt
-@auth.route('/admin_logout', methods=['GET','POST'])
+@auth.route('/admin_logout', methods=['GET', 'POST'])
 def admin_logout():
-    return redirect(url_for('auth.admin_login'))
+    try:
+        # Manually verify the JWT without using the @jwt_required() decorator
+        verify_jwt_in_request()
+        jti = get_jwt()["jti"]
+        
+        # Revoke the token by adding it to the RevokedToken table
+        revoked_token = RevokedToken(jti=jti)
+        db.session.add(revoked_token)
+        db.session.commit()
+        
+        # Clear the JWT cookie
+        response = make_response(redirect(url_for('auth.admin_login')))
+        response.delete_cookie('access_token_cookie')  # Clear the token cookie
+        
+        return response
+    
+    except Exception as e:
+        # If there's an issue with the token, redirect to the login page
+        return redirect(url_for('auth.admin_login'))

@@ -12,11 +12,13 @@ from datetime import datetime
 from app.decorators import admin_required
 from sqlalchemy import func
 from helpers import get_url
+from flask_jwt_extended import jwt_required, get_jwt_identity, set_access_cookies
+
 
 admin = Blueprint('admin', __name__)
 
 @admin.route('/home', methods=['GET'])
-@admin_required
+@jwt_required()
 def home():
     admin_id = session.get('admin_id')
     if not admin_id:
@@ -68,7 +70,7 @@ def home():
 
 
 @admin.route('/confirm/<int:hr_id>', methods=['GET', 'POST'])
-@admin_required
+@jwt_required()
 def confirm_account(hr_id):
     admin_id = request.form.get('admin_id')  # Get admin_id from session set by the decorator
     print(f"admin_id from session: {admin_id}")
@@ -83,7 +85,7 @@ def confirm_account(hr_id):
 
 
 @admin.route('/accept/<int:hr_id>', methods=['POST'])
-@admin_required
+@jwt_required()
 def accept_account(hr_id):
     admin_id = request.form.get('admin_id')  # Get admin_id from session set by the decorator
     if not admin_id:
@@ -105,8 +107,9 @@ def accept_account(hr_id):
     mail.send(msg)
     return redirect(url_for('admin.home', admin_id=admin_id))
 
+
 @admin.route('/deny/<int:hr_id>', methods=['POST'])
-@admin_required
+@jwt_required()
 def deny_account(hr_id):
     user = HR.query.get_or_404(hr_id)
     admin_id = request.form.get('admin_id')  # Get admin_id from session set by the decorator
@@ -130,16 +133,11 @@ def deny_account(hr_id):
     
     return redirect(url_for('admin.home', admin_id=admin_id))
 
-@admin.route('/logout', methods=['GET','POST'])
-def logout():
-    session.pop('admin_id', None)
-    flash('You have been logged out.', 'success')
-    return redirect(url_for('auth.admin_login'))
 
 
 
 @admin.route('/delete_hr/<int:hr_id>', methods=['POST'])
-@admin_required
+@jwt_required()
 def delete_hr(hr_id):
     hr = HR.query.get_or_404(hr_id)
     db.session.delete(hr)
@@ -150,7 +148,7 @@ def delete_hr(hr_id):
 
 
 @admin.route('/view_hr_info/<int:hr_id>', methods=['GET'])
-@admin_required
+@jwt_required()
 def view_hr_info(hr_id):
     admin_id = session.get('admin_id')  # Get admin_id from session set by the decorator
     hr = HR.query.get_or_404(hr_id)
