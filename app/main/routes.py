@@ -139,79 +139,91 @@ def home(hr_id):
 @main.route('/create_interview/<int:hr_id>', methods=['GET', 'POST'])
 @jwt_required()
 def create_interview(hr_id):
-    if request.method == 'POST':
-        language = request.form['language']
-        position = request.form['position']  # New field
-        #role = request.form['role']
-        role = "Sales"
-        subrole = request.form['subrole']
-        industry = request.form['industry']
-       
+    # Handle POST request (form submission)
+    if not get_jwt_identity():
+        return jsonify({"msg": "User is not authenticated."}), 401
+    try:
+        if request.method == 'POST':
+            data = request.get_json()
 
-        if industry == "Other":
-            industry = request.form.get('other_industry', '').strip()
-            if not industry:
-                flash('Please specify the industry if "Other" is selected.', 'danger')
-                return redirect(url_for('main.create_interview', hr_id=hr_id))
+            if not data:
+                return jsonify({"msg": "Invalid data. Please provide the required fields in JSON format."}), 400
 
 
-        duration = int(request.form['duration'])
-        situations = request.form.getlist('situations')
+            # Extract fields from JSON data
+            language = data.get('language')
+            position = data.get('position')
+            role = "Sales"  # This is hardcoded as per your original code
+            subrole = data.get('subrole')
+            industry = data.get('industry')
+            duration = int(data.get('duration', 0))  # Default to 0 if duration is not provided
+            situations = data.get('situations', [])  # Get situations, default to an empty list if not provided
+            if not isinstance(situations, list):
+                return jsonify({"msg": "Situations should be a list."}), 400
 
+            if industry == "Other":
+                industry = data.get('other_industry', '').strip()
+                if not industry:
+                    return jsonify({"msg": "Please specify the industry if 'Other' is selected."}), 400
 
+            # Load the JSON file to get the ponderation
+            json_path = os.path.join(current_app.root_path, 'interview_situations_v3.json')
+            with open(json_path) as f:
+                interview_situations = json.load(f)
 
-        # Load the JSON file to get the ponderation
-        json_path = os.path.join(current_app.root_path, 'interview_situations_v3.json')
-        with open(json_path) as f:
-            interview_situations = json.load(f)
-        
-        ponderations = []
-        for situation in situations:
-            default_ponderation = interview_situations.get(role, {}).get(subrole, {}).get(situation, [3, 3, 3, 3, 3])
-            # Override default ponderation if provided by HR
-            custom_ponderation = [
-                int(request.form.get(f'ponderation_{i+1}', default_ponderation[i]))
-                for i in range(6)
-            ]
-            custom_ponderation = [1+(int(custom_ponderation[i])-3)*0.1 for i in range(len(custom_ponderation))]
-            ponderations.append(custom_ponderation)
+            ponderations = []
+            for situation in situations:
+                default_ponderation = interview_situations.get(role, {}).get(subrole, {}).get(situation, [3, 3, 3, 3, 3])
+                custom_ponderation = [
+                    int(data.get(f'ponderation_{i+1}', default_ponderation[i]))
+                    for i in range(6)
+                ]
+                custom_ponderation = [1 + (int(custom_ponderation[i]) - 3) * 0.1 for i in range(len(custom_ponderation))]
+                ponderations.append(custom_ponderation)
 
-        # Use default ponderation if no situations are selected
-        if not situations:
-            ponderations = [[1, 1, 1, 1, 1, 1]]
+            # Use default ponderation if no situations are selected
+            if not situations:
+                ponderations = [[1, 1, 1, 1, 1, 1]]
 
-        new_interview = Interview(hr_id=hr_id, name = position)
-        db.session.add(new_interview)
-        db.session.commit()
+            # Create and save the interview and its parameters
+            new_interview = Interview(hr_id=hr_id, name=position)
+            db.session.add(new_interview)
+            db.session.commit()
 
-        interview_parameter = InterviewParameter(
-            language=language,
-            role=role,
-            subrole = subrole,
-            industry=industry,
-            duration=duration,
-            situation=json.dumps(situations),  # Store situations as JSON string
-            ponderation=json.dumps(ponderations),  # Store ponderations as JSON string
-            interview_id=new_interview.id
-        )
-        
-        db.session.add(interview_parameter)
-        db.session.commit()
-        return redirect(url_for('main.interview_generated', interview_parameter_id=interview_parameter.id, hr_id=hr_id))
-        
+            interview_parameter = InterviewParameter(
+                language=language,
+                role=role,
+                subrole=subrole,
+                industry=industry,
+                duration=duration,
+                situation=json.dumps(situations),  # Store situations as JSON string
+                ponderation=json.dumps(ponderations),  # Store ponderations as JSON string
+                interview_id=new_interview.id
+            )
+
+            db.session.add(interview_parameter)
+            db.session.commit()
+
+            # Return a JSON response indicating success
+            return jsonify({"msg": "Interview created successfully.", "redirect_url": url_for('main.interview_generated', interview_parameter_id=interview_parameter.id, hr_id=hr_id)}), 200
+
+        # Handle GET request (render the form)
+        else:
+            # Construct the correct file path to the JSON file
+            json_path = os.path.join(current_app.root_path, 'interview_situations_v3.json')
+
+            with open(json_path) as f:
+                interview_situations = json.load(f)
+
+            # Render the create interview template with the interview situations data
+            return render_template('hr/create_interview.html', hr_id=hr_id, interview_situations=interview_situations)
+
+    except Exception as e:
+        current_app.logger.error(f"Error in create_interview: {str(e)}")
+        return jsonify({"msg": "An error occurred on the server. Please try again."}), 500
     
-    # Construct the correct file path to the JSON file
-    #json_path = os.path.join(current_app.root_path, 'interview_situations.json')
 
-    # Construct the correct file path to the JSON file
-    json_path = os.path.join(current_app.root_path, 'interview_situations_v3.json')
-
-    with open(json_path) as f:
-        interview_situations = json.load(f)
-
-    return render_template('hr/create_interview.html', hr_id=hr_id, interview_situations=interview_situations)
-
-@main.route('/interview_generated/<int:hr_id>/<int:interview_parameter_id>', methods=['GET'])
+@main.route('/interview_generated/<int:hr_id>/<int:interview_parameter_id>', methods=['GET', 'POST'])
 @jwt_required()
 def interview_generated(hr_id,interview_parameter_id):
     interview_parameter = InterviewParameter.query.get_or_404(interview_parameter_id)
@@ -352,20 +364,26 @@ def applicant_home(hr_id, interview_parameter_id):
     error_message = None
 
     if request.method == 'POST':
-        name = request.form['name']
-        surname = request.form['surname']
-        email = request.form['email']
+        data = request.get_json()  # Fetch JSON data from the request
+        if data is None:
+            return jsonify({"msg": "Invalid input, JSON data required"}), 400
+        
+        name = data.get('name')
+        surname = data.get('surname')
+        email = data.get('email')
 
         # Server-side validation
         if not name or not surname or not email:
-            error_message = ""
-        else:
-            new_applicant = Applicant(name=name, surname=surname, email_address=email)
-            db.session.add(new_applicant)
-            db.session.commit()
+            return jsonify({"msg": "All fields are required."}), 400
 
-            return redirect(url_for('main.start_chat', hr_id = hr_id, interview_parameter_id=interview_parameter_id, interview_id=interview_id, applicant_id = new_applicant.id))
+        new_applicant = Applicant(name=name, surname=surname, email_address=email)
+        db.session.add(new_applicant)
+        db.session.commit()
 
+        return jsonify({
+            "redirect_url": url_for('main.start_chat', hr_id=hr_id, interview_parameter_id=interview_parameter_id, interview_id=interview_id, applicant_id=new_applicant.id)
+        }), 200
+    
     return render_template(
         'applicant/applicant_home.html', 
         interview_parameter_id=interview_parameter_id,
@@ -554,7 +572,6 @@ def finish_chat(hr_id, interview_id, interview_parameter_id, session_id, applica
                                                                      interview_parameter.situation, 
                                                                      conversation)
     
-    # CRITERIA RESULT = TOUT LE BIG DICO. 
     # Convert the dictionary to a JSON string before saving to the database
     score_interview_str = json.loads(score_interview)  
     

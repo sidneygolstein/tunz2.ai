@@ -94,11 +94,44 @@
         });
 
         // Handle confirmation modal actions
-        confirmYes.addEventListener('click', function() {
+        confirmYes.addEventListener('click', async function() {
             startInterviewBtn.disabled = true; // Disable the start button
             confirmationModal.style.display = 'none';  // Hide confirmation modal
             loadingModal.style.display = 'block';  // Show loading modal
-            form.submit();  // Submit the form
+
+            // Collect form data
+            const formData = new FormData(form);
+
+            try {
+                const formDataObject = {};
+                formData.forEach((value, key) => {
+                    formDataObject[key] = value;
+                });
+    
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formDataObject),
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    // Handle success, e.g., redirect to the chat page
+                    const data = await response.json();
+                    window.location.href = data.redirect_url;
+                } else {
+                    // Handle server errors
+                    alert("An error occurred. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred while submitting the form.");
+            } finally {
+                //loadingModal.style.display = 'none';  // Hide loading modal
+                startInterviewBtn.disabled = false;  // Re-enable the start button
+            }
         });
 
         confirmNo.addEventListener('click', function() {
@@ -106,6 +139,7 @@
         });
     });
 </script>
+
 
 
 

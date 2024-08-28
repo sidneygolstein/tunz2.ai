@@ -5,7 +5,7 @@ from app.models.hr import HR
 from app.models.company import Company
 from app.models.admin import Admin
 from app.models.revoked_token import RevokedToken
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, decode_token, set_access_cookies, get_jwt, verify_jwt_in_request
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, decode_token, set_access_cookies, get_jwt, verify_jwt_in_request,unset_jwt_cookies
 
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
@@ -99,28 +99,34 @@ def is_strong_password(password):
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        data = request.get_json()  # This expects the data to be JSON
-        if not data:  # Handle the case where the JSON parsing fails
+        data = request.get_json()
+        if not data:
             return jsonify({"msg": "Invalid input, JSON data required"}), 400
         
         email = data.get('email')
         password = data.get('password')
 
-        # Your existing logic for authentication
         hr = HR.query.filter_by(email=email).first()
 
         if hr and hr.check_password(password):
             if hr.confirmed:
                 access_token = create_access_token(identity={"hr_id": hr.id})
-                response = make_response(jsonify({"msg": "✅ Login succeeded", "redirect_url": url_for('main.home', hr_id=hr.id)}))
-                response.set_cookie('access_token_cookie', access_token, httponly=True, secure=True)
+
+                # Create a response object and set the JWT token in the cookies
+                response = make_response(jsonify({
+                    "msg": "✅ Login succeeded", 
+                    "redirect_url": url_for('main.home', hr_id=hr.id)
+                }))
+                set_access_cookies(response, access_token)
+
                 return response, 200
             else:
                 return jsonify({"msg": "👋 Hi, the TUNZ admin has not yet approved your registration."}), 403
         return jsonify({"msg": "⛔ Incorrect email or password."}), 400
 
-    # Handle GET request to render the login page
     return render_template('auth/login.html')
+
+
 
 
 
@@ -312,26 +318,25 @@ def admin_register():
 @auth.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        data = request.get_json()  # Expecting JSON data
+        if not data:  # Handle the case where JSON parsing fails
+            return jsonify({"msg": "Invalid input, JSON data required"}), 400
+        
+        email = data.get('email')
+        password = data.get('password')
+        
         admin = Admin.query.filter_by(email=email).first()
 
         if admin and admin.check_password(password):
-            # Create a JWT token for the admin
             access_token = create_access_token(identity={"admin_id": admin.id})
-            
-            # Create a response to return the rendered template or redirect
-            response = make_response(redirect(url_for('admin.home')))
-            
-            # Store the JWT token in an HTTP-only cookie
+            response = make_response(jsonify({"msg": "✅ Login succeeded", "redirect_url": url_for('admin.home')}))
             response.set_cookie('access_token_cookie', access_token, httponly=True, secure=True)
-            
-            return response
+            return response, 200
         
-        # If credentials are invalid, return an error message
         return jsonify({"msg": "Invalid credentials"}), 401
     
     return render_template('auth/admin_login.html')
+
 
 
 @auth.route('/admin_logout', methods=['GET', 'POST'])

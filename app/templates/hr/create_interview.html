@@ -3,13 +3,13 @@
 {% block content %}
 
 <link rel="stylesheet" href="{{ url_for('static', filename='static/styles.css') }}">
-<script src="{{ url_for('static', filename='static/js/confirmation.js') }}"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 <div class="container">
     <h1>🧑‍🎨 Design Your Interview</h1>
     <form id="create-interview-form" action="{{ url_for('main.create_interview', hr_id=hr_id) }}" method="POST">
 
+        <!-- Correct label for matching the ID -->
         <div class="kpi-container">
             <div class="interview-param-box">
                 <label for="position"><strong>🖌️ What is the job title?</strong></label>
@@ -21,9 +21,9 @@
 
         <div class="kpi-container">
             <div class="interview-param-box">
-                <label for="language"> <strong>🌍 Select interview language </strong></label>
+                <label for="language"><strong>🌍 Select interview language </strong></label>
                 <div class="select">
-                    <select name="language" class="form-control" required>
+                    <select id="language" name="language" class="form-control" required>
                         <option value="English">English</option>
                         <option value="French">French</option>
                         <option value="Spanish">Spanish</option>
@@ -35,9 +35,9 @@
 
         <div class="kpi-container">
             <div class="interview-param-box">
-                <label for="duration"> <strong>⏱️ Set interview duration </strong></label>
+                <label for="duration"><strong>⏱️ Set interview duration </strong></label>
                 <div class="select">
-                    <select name="duration" class="form-control" required>
+                    <select id="duration" name="duration" class="form-control" required>
                         <option value="1">1 minute</option>
                         <option value="2">2 minutes</option>
                         <option value="5">5 minutes</option>
@@ -53,11 +53,7 @@
 
         <div class="kpi-container">
             <div class="interview-param-box">
-                <label for="industry"><strong>💻 Select relevant industry</strong></label>
-                <!-- Info icon with tooltip -->
-                <div class="info-icon" data-tooltip="Selecting an industry will enable our AI engine to tailor the interview scenario and assessment to be as relevant as possible for this position." data-position="right">
-                    <i class="fas fa-info-circle"></i>
-                </div>
+                <label for="industry-select"><strong>💻 Select relevant industry</strong></label>
                 <div class="select">
                     <select id="industry-select" name="industry" class="form-control" required>
                         <option value="Blockchain/Web3">Blockchain/Web3</option>
@@ -75,7 +71,6 @@
                         <option value="Other">Other (Please specify)</option>
                     </select>
                 </div>
-                
                 <div id="other-industry-container" style="display: none; margin-top: 10px;">
                     <label for="other-industry">Please specify:</label>
                     <input type="text" id="other-industry" name="other_industry" class="form-control" placeholder="Enter the industry">
@@ -85,13 +80,9 @@
 
         <div class="kpi-container">
             <div class="interview-param-box">
-                <label for="subrole"><strong>🧑‍💻 Select role type</strong></label>
-                <!-- Info icon with tooltip -->
-                <div class="info-icon" data-tooltip="Selecting a role type will enable our AI engine to tailor the interview scenario and assessment to be as relevant as possible for this position." data-position="right">
-                    <i class="fas fa-info-circle"></i>
-                </div>
+                <label for="subrole-select"><strong>🧑‍💻 Select role type</strong></label>
                 <div class="select">
-                    <select name="subrole" class="form-control" id="subrole-select" required>
+                    <select id="subrole-select" name="subrole" class="form-control" required>
                         <option value="Business Development">Business Development</option>
                         <option value="Sales Development">Sales Development</option>
                         <option value="Account Management">Account Management</option>
@@ -103,7 +94,7 @@
         <!-- Situation selection row -->
         <div class="kpi-container">
             <div class="interview-param-box">
-                <label for="situations"><strong>🎯 Select one or multiple interview scenarios</strong></label>
+                <label for="situations-select"><strong>🎯 Select one or multiple interview scenarios</strong></label>
                 <!-- Info icon with tooltip -->
                 <div class="info-icon" data-tooltip="Selecting one or multiple interview scenarios will enable you to ensure our AI engine generates sales simulations to test candidates that are the most relevant for what you are looking for." data-position="right">
                     <i class="fas fa-info-circle"></i>
@@ -117,120 +108,114 @@
             </div>
         </div>
 
-        
-
         <!-- Criteria Ponderation Section -->
         <div class="criteria-container">
             <div class="interview-param-box">
-                <label for="criteria"><strong>⭐ (Optional) What is important for this role?</strong></label>
-                 <!-- Info icon with tooltip -->
-                 <div class="info-icon" data-tooltip="Our AI scoring engine pre-set relative importance of 6 key criteria to evaluate applicants. You can adapt the importance of each criteria from less important (one star) to very important (5 stars) depending on what you are looking for in applicants for this role." data-position="right">
-                    <i class="fas fa-info-circle"></i>
-                </div>
-                <div> </div>
+                <strong>⭐ (Optional) What is important for this role?</strong>
                 <div class="criteria-list">
                     <div class="criteria-item">
-                        <label>Communication Skills</label>
-                        <div class="star-rating" data-rating="3">
-                            <span class="star" data-value="1">&#9733;</span>
-                            <span class="star" data-value="2">&#9733;</span>
-                            <span class="star" data-value="3">&#9733;</span>
-                            <span class="star" data-value="4">&#9733;</span>
-                            <span class="star" data-value="5">&#9733;</span>
-                        </div>
-                        <input type="hidden" name="ponderation_1" value="3">
+                        <fieldset>
+                            <legend>Communication Skills</legend>
+                            <div id="star-rating" class="star-rating" data-rating="3">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                            </div>
+                            <input type="hidden" id="ponderation_1" name="ponderation_1" value="3">
+                        </fieldset>
                     </div>
                     <div class="criteria-item">
-                        <label>Logical Reasoning & Structure and Problem Solving</label>
-                        <div class="star-rating" data-rating="3">
-                            <span class="star" data-value="1">&#9733;</span>
-                            <span class="star" data-value="2">&#9733;</span>
-                            <span class="star" data-value="3">&#9733;</span>
-                            <span class="star" data-value="4">&#9733;</span>
-                            <span class="star" data-value="5">&#9733;</span>
-                        </div>
-                        <input type="hidden" name="ponderation_2" value="3">
+                        <fieldset>
+                            <legend>Logical Reasoning & Structure and Problem Solving</legend>
+                            <div id="star-rating" class="star-rating" data-rating="3">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                            </div>
+                            <input type="hidden" id="ponderation_2" name="ponderation_2" value="3">
+                        </fieldset>
                     </div>
                     <div class="criteria-item">
-                        <label>Creativity</label>
-                        <div class="star-rating" data-rating="3">
-                            <span class="star" data-value="1">&#9733;</span>
-                            <span class="star" data-value="2">&#9733;</span>
-                            <span class="star" data-value="3">&#9733;</span>
-                            <span class="star" data-value="4">&#9733;</span>
-                            <span class="star" data-value="5">&#9733;</span>
-                        </div>
-                        <input type="hidden" name="ponderation_3" value="3">
+                        <fieldset>
+                            <legend>Creativity</legend>
+                            <div id="star-rating" class="star-rating" data-rating="3">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                            </div>
+                            <input type="hidden" id="ponderation_3" name="ponderation_3" value="3">
+                        </fieldset>
                     </div>
                     <div class="criteria-item">
-                        <label>Business Acumen</label>
-                        <div class="star-rating" data-rating="3">
-                            <span class="star" data-value="1">&#9733;</span>
-                            <span class="star" data-value="2">&#9733;</span>
-                            <span class="star" data-value="3">&#9733;</span>
-                            <span class="star" data-value="4">&#9733;</span>
-                            <span class="star" data-value="5">&#9733;</span>
-                        </div>
-                        <input type="hidden" name="ponderation_4" value="3">
+                        <fieldset>
+                            <legend>Business Acumen</legend>
+                            <div id="star-rating" class="star-rating" data-rating="3">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                            </div>
+                            <input type="hidden" id="ponderation_4" name="ponderation_4" value="3">
+                        </fieldset>
                     </div>
                     <div class="criteria-item">
-                        <label>Analytical Skills</label>
-                        <div class="star-rating" data-rating="3">
-                            <span class="star" data-value="1">&#9733;</span>
-                            <span class="star" data-value="2">&#9733;</span>
-                            <span class="star" data-value="3">&#9733;</span>
-                            <span class="star" data-value="4">&#9733;</span>
-                            <span class="star" data-value="5">&#9733;</span>
-                        </div>
-                        <input type="hidden" name="ponderation_5" value="3">
+                        <fieldset>
+                            <legend>Analytical Skills</legend>
+                            <div id="star-rating" class="star-rating" data-rating="3">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                            </div>
+                            <input type="hidden" id="ponderation_5" name="ponderation_5" value="3">
+                        </fieldset>
                     </div>
                     <div class="criteria-item">
-                        <label>Project Management & Priorization</label>
-                        <div class="star-rating" data-rating="3">
-                            <span class="star" data-value="1">&#9733;</span>
-                            <span class="star" data-value="2">&#9733;</span>
-                            <span class="star" data-value="3">&#9733;</span>
-                            <span class="star" data-value="4">&#9733;</span>
-                            <span class="star" data-value="5">&#9733;</span>
-                        </div>
-                        <input type="hidden" name="ponderation_6" value="3">
+                        <fieldset>
+                            <legend>Project Management & Prioritization</legend>
+                            <div id="star-rating" class="star-rating" data-rating="3">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                            </div>
+                            <input type="hidden" id="ponderation_6" name="ponderation_6" value="3">
+                        </fieldset>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="kpi-container">
         </div>
 
-
         <div class="kpi-container">
             <div class="selected-situations">
-                <label><strong>✅ Selected Situations</strong></label>
+                <strong>✅ Selected Situations</strong>
                 <ul id="selected-situations">
                     <!-- Selected situations will be shown here -->
                 </ul>
             </div>
         </div>
 
-        <!-- Create button -->
+
         <div class="create-button-container">
-            <button type="submit" class="btn btn-primary create-interview-btn" data-action="create-itw">✨ Create your AI interview</button>
+            <button type="submit" class="btn btn-primary create-interview-btn">✨ Create your AI interview</button>
         </div>
     </form>
 </div>
 
-<!-- Confirmation Modal -->
-<div id="confirmation-modal" class="modal">
-    <div class="modal-content">
-        <p id="confirmation-message">Are you sure you want to create this interview?</p>
-        <button id="confirm-yes">Yes</button>
-        <button id="confirm-no">No</button>
-    </div>
-</div>
-
 <!-- Javascript code -->
-
 <script>
+
     document.addEventListener("DOMContentLoaded", function() {
         const subRoleSelect = document.getElementById("subrole-select");
         const situationsSelect = document.getElementById("situations-select");
@@ -366,12 +351,76 @@
             }
         });
     });
+
+
+    document.getElementById("create-interview-form").addEventListener("submit", async function(event) {
+        event.preventDefault();  // Prevent the default form submission
+
+        const form = document.getElementById("create-interview-form");
+    
+        // Log to check if the form submission is triggered
+        console.log("Form submission triggered");
+    
+        // Collect form data
+        const formData = {
+            position: document.getElementById("position").value,
+            language: document.getElementById("language").value,
+            duration: document.getElementById("duration").value,
+            industry: document.getElementById("industry-select").value,
+            other_industry: document.getElementById("other-industry").value,
+            subrole: document.getElementById("subrole-select").value,
+            ponderation_1: document.getElementById("ponderation_1").value,
+            ponderation_2: document.getElementById("ponderation_2").value,
+            ponderation_3: document.getElementById("ponderation_3").value,
+            ponderation_4: document.getElementById("ponderation_4").value,
+            ponderation_5: document.getElementById("ponderation_5").value,
+            ponderation_6: document.getElementById("ponderation_6").value,
+            situations: Array.from(document.querySelectorAll('input[name="situations"]')).map(input => input.value)
+        };
+    
+        console.log("Form data collected:", formData);
+    
+        try {
+            // Retrieve the JWT token from localStorage
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                throw new Error("JWT token not found. Please log in again.");
+            }
+    
+            console.log("JWT token retrieved:", token);
+    
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`  // Include the JWT token in the Authorization header
+                },
+                body: JSON.stringify(formData),
+                credentials: 'include'  // Send cookies with the request
+            });
+    
+            console.log("Response received:", response);
+    
+            if (response.ok) {
+                const data = await response.json();
+                window.location.href = data.redirect_url;  // Redirect on successful submission
+            } else {
+                const errorText = await response.text();
+                console.error("An error occurred:", errorText);
+                alert("An error occurred. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error submitting form:", error.message);
+            alert("An error occurred while submitting the form.");
+        }
+    });
+    
+
     
 </script>
+    
 
+        
 
-
-
-
-
+        
 {% endblock %}

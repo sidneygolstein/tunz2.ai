@@ -20,12 +20,15 @@ admin = Blueprint('admin', __name__)
 @admin.route('/home', methods=['GET'])
 @jwt_required()
 def home():
-    admin_id = session.get('admin_id')
-    if not admin_id:
+    admin_identity = get_jwt_identity()
+    
+    if not admin_identity or 'admin_id' not in admin_identity:
         flash('Please log in to access the admin dashboard.', 'danger')
         return redirect(url_for('auth.admin_login'))
 
-    admin = Admin.query.get(admin_id)
+    # Fetch the admin using the ID from the JWT token
+    admin = Admin.query.get(admin_identity['admin_id'])
+
     if not admin:
         flash('Admin not found.', 'danger')
         return redirect(url_for('auth.admin_login'))
@@ -87,13 +90,19 @@ def confirm_account(hr_id):
 @admin.route('/accept/<int:hr_id>', methods=['POST'])
 @jwt_required()
 def accept_account(hr_id):
-    admin_id = request.form.get('admin_id')  # Get admin_id from session set by the decorator
+    data = request.get_json()  # Fetch JSON data from the request
+    if data is None:
+        return jsonify({"msg": "Invalid input, JSON data required"}), 400
+    
+    admin_id = data.get('admin_id')
     if not admin_id:
         return jsonify({"msg": "Admin ID missing from form data"}), 400
+    
     user = HR.query.get_or_404(hr_id)
     if not user:
         flash('User not found.', 'danger')
         return redirect(url_for('admin.home', admin_id=admin_id))
+    
     user.confirmed = True
     db.session.commit()
 
@@ -102,35 +111,40 @@ def accept_account(hr_id):
                   sender='noreply@tunz.ai',
                   recipients=[user.email])
     url = get_url('auth.login')
-    # {url_for('auth.login', _external=True, _scheme='https')} 
-    msg.body = f'👋 Hello {user.name}, \n\nWe have just confirmed your account! You are all set, lets get you started and create your first AI interviews to send to applicants!\nTo login, just go to: {url} \n\nThanks a lot! \nThe Tunz AI Team.'
+    msg.body = f'👋 Hello {user.name}, \n\nWe have just confirmed your account! You are all set. To login, go to: {url} \n\nThanks! \nThe Tunz AI Team.'
     mail.send(msg)
-    return redirect(url_for('admin.home', admin_id=admin_id))
+    
+    return jsonify({"redirect_url": url_for('admin.home', admin_id=admin_id)}), 200
 
 
 @admin.route('/deny/<int:hr_id>', methods=['POST'])
 @jwt_required()
 def deny_account(hr_id):
-    user = HR.query.get_or_404(hr_id)
-    admin_id = request.form.get('admin_id')  # Get admin_id from session set by the decorator
+    data = request.get_json()  # Fetch JSON data from the request
+    if data is None:
+        return jsonify({"msg": "Invalid input, JSON data required"}), 400
+    
+    admin_id = data.get('admin_id')
     if not admin_id:
         return jsonify({"msg": "Admin ID missing from form data"}), 400
     
+    user = HR.query.get_or_404(hr_id)
     if not user:
         flash('User not found.', 'danger')
         return redirect(url_for('admin.home', admin_id=admin_id))
-    
+
     # Send email to HR denying account activation
     msg = Message('Account Denied',
                   sender='noreply@tunz.ai',
                   recipients=[user.email])
-    msg.body = f'👋  Hello {user.name}, \n\n Unfortunatelly, your account has been denied by the admin so you cannot login using your credentials. If you have any question, please contact: sidney@tunz.ai or sebastien@tunz.ai. \n\n The Tunz AI Team.'
+    msg.body = f'👋 Hello {user.name}, \n\n Unfortunately, your account has been denied. If you have any questions, please contact us. \n\n The Tunz AI Team.'
     mail.send(msg)
+    
     db.session.delete(user)
     db.session.commit()
-
     
-    return redirect(url_for('admin.home', admin_id=admin_id))
+    return jsonify({"redirect_url": url_for('admin.home', admin_id=admin_id)}), 200
+
 
 
 
@@ -138,11 +152,33 @@ def deny_account(hr_id):
 @admin.route('/delete_hr/<int:hr_id>', methods=['POST'])
 @jwt_required()
 def delete_hr(hr_id):
-    hr = HR.query.get_or_404(hr_id)
-    db.session.delete(hr)
-    db.session.commit()
-    flash('HR deleted successfully.', 'success')
-    return redirect(url_for('admin.home'))
+    try:
+        # Determine if the request is sending JSON data
+        if request.is_json:
+            data = request.get_json()
+        else:
+            # Fallback to form data if it's a regular form submission
+            data = request.form
+
+        # Proceed with the deletion
+        hr = HR.query.get_or_404(hr_id)
+        db.session.delete(hr)
+        db.session.commit()
+
+        # Handle JSON and form-based submissions
+        if request.is_json:
+            return jsonify({"msg": "HR deleted successfully.", "redirect_url": url_for('admin.home')}), 200
+        else:
+            flash('HR deleted successfully.', 'success')
+            return redirect(url_for('admin.home'))
+
+    except Exception as e:
+        # Handle exceptions for both JSON and form-based submissions
+        if request.is_json:
+            return jsonify({"msg": f"An error occurred: {str(e)}"}), 500
+        else:
+            flash(f"An error occurred: {str(e)}", 'danger')
+            return redirect(url_for('admin.home'))
 
 
 

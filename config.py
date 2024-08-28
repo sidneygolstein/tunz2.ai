@@ -32,9 +32,19 @@ class Config:
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
     from datetime import timedelta
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)  # Set token expiration time
+    #JWT_TOKEN_LOCATION = ["cookies"]
+    #JWT_COOKIE_SECURE = True  # Enable this for HTTPS only
+    #JWT_COOKIE_CSRF_PROTECT = True  # CSRF protection
+    #JWT_TOKEN_LOCATION = ["headers"]  # Default to using headers
+    #JWT_TOKEN_LOCATION = ["headers"]  # or include "cookies" if you're also using cookies
+    #JWT_HEADER_NAME = "Authorization"
+    #JWT_HEADER_TYPE = "Bearer"
+    # Configure JWT to use cookies
     JWT_TOKEN_LOCATION = ["cookies"]
-    JWT_COOKIE_SECURE = True  # Enable this for HTTPS only
-    JWT_COOKIE_CSRF_PROTECT = True  # CSRF protection
+    JWT_COOKIE_SECURE = True  # Set to True in production with HTTPS
+    JWT_COOKIE_CSRF_PROTECT = False  # Set to True if you want CSRF protection on cookies
+
+
 
 
 

@@ -5,7 +5,7 @@
 {% block content %}
 <h2>👋 WELCOME DEAR ADMIN</h2>
 <h2>Please Login</h2>
-<form action="{{ url_for('auth.admin_login') }}" method="POST">
+<form id="admin-login-form">
     <input type="email" id="email" name="email" placeholder="Enter your email" required>
     <input type="password" id="password" name="password" placeholder="Enter your password" required>
     <a href="{{ url_for('auth.request_reset_password') }}" class="forgot-password-link">Forgot Password?</a>
@@ -27,14 +27,37 @@
             {% for category, message in messages %}
                 alert("{{ message }}");  // Popup the flash message as an alert
             {% endfor %}
-            // Optionally, redirect after showing the alert
-            setTimeout(function() {
-                window.location.href = "{{ url_for('auth.admin_login') }}";
-            }, 1000);  // Adjust the timeout as needed
         });
     </script>
 {% endif %}
 {% endwith %}
 
-<script src="{{ url_for('static', filename='static/js/admin_login.js') }}"></script>
+<script>
+    document.getElementById('admin-login-form').addEventListener('submit', async (event) => {
+        event.preventDefault();  // Prevent the default form submission behavior
+    
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+    
+        const response = await fetch('{{ url_for("auth.admin_login") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',  // Ensure you're sending JSON
+            },
+            body: JSON.stringify({ email, password })  // Convert form data to JSON string
+        });
+    
+        const data = await response.json();
+    
+        if (response.ok) {
+            // Store the token in local storage
+            localStorage.setItem('access_token', data.access_token);
+            // On successful login, redirect the user
+            window.location.href = data.redirect_url;
+        } else {
+            // Display the error message as a popup
+            alert(data.msg);
+        }
+    });
+</script>
 {% endblock %}
