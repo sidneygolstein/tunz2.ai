@@ -41,8 +41,8 @@ class Config:
     #JWT_HEADER_TYPE = "Bearer"
     # Configure JWT to use cookies
     JWT_TOKEN_LOCATION = ["cookies"]
-    JWT_COOKIE_SECURE = True  # Set to True in production with HTTPS
-    JWT_COOKIE_CSRF_PROTECT = True  # Set to True if you want CSRF protection on cookies
+    JWT_COOKIE_SECURE = False  # Set to True in production with HTTPS
+    JWT_COOKIE_CSRF_PROTECT = False  # Set to True if you want CSRF protection on cookies
 
 
 
