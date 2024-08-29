@@ -206,3 +206,31 @@ document.addEventListener("DOMContentLoaded", function() {
         sendButton.style.backgroundColor = "#515BD4"; // Correct hex color code
     }
 });
+
+// ANTI FRAUD STRATEGIES: 
+let focusLossCount = 0;  // Initialize a counter for focus losses
+let suppressBlurAlert = false;  // Flag to suppress the blur alert
+
+// Detecting paste attempts
+textarea.addEventListener('paste', function(event) {
+    event.preventDefault();
+    suppressBlurAlert = true;  // Suppress the blur alert
+    alert("Unfortunately, pasting is disabled during this interview.");
+    suppressBlurAlert = false;  // Reset the flag after the alert
+});
+
+// Detecting right-click (context menu) attempts
+document.addEventListener('contextmenu', function(event) {
+    event.preventDefault();
+    suppressBlurAlert = true;  // Suppress the blur alert
+    alert("Unfortunately, right-click is disabled during this interview.");
+    suppressBlurAlert = false;  // Reset the flag after the alert
+});
+
+// Detecting window switch
+window.addEventListener('blur', function() {
+    if (!suppressBlurAlert) {  // Only show the blur alert if not suppressed
+        focusLossCount++;  // Increment the focus loss counter
+        alert("Leaving the chat window is not allowed during this interview.");
+    }
+});
