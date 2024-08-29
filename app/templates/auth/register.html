@@ -4,25 +4,35 @@
 {% block content %}
 <h2>👋 WELCOME TO TUNZ</h2>
 <h2>Please Register</h2>
-<p>You password must be robust: At least 8 characters, one upper case letter, one digit, one special character</p>
-<form id="register-form">
+<form id="register-form" class="form-group">
     <label for="name"></label>
     <input type="text" id="name" name="name" placeholder="Please enter your name" required>
+    
     <label for="surname"></label>
-    <input type="text" id="surname" name="surname" placeholder="Please enter your surnname" required>
+    <input type="text" id="surname" name="surname" placeholder="Please enter your surname" required>
+    
     <label for="company_name"></label>
     <input type="text" id="company_name" name="company_name" placeholder="Please enter your company name" required>
+    
     <label for="email"></label>
     <input type="email" id="email" name="email" placeholder="Please enter your email" required>
-    <label for="password"></label>
-    <input type="password" id="password" name="password" placeholder="Please enter your password" required>
+    
+    <div class="password-container">
+        <input type="password" id="password" name="password" placeholder="Please enter your password" required>
+    </div>
+    <div id="password-strength-message" style="color: gray; display: none;">
+        Password must be robust: At least 8 characters. At least one uppercase letter. At least one digit. At least one special character.
+    </div>
+    
     <label for="confirm-password"></label>
     <input type="password" id="confirm-password" name="confirm-password" placeholder="Please confirm your password" required>
+    
     <button type="submit">Register</button>
 </form>
+
 <a href="{{ url_for('auth.login') }}" class="register-link">Already have an account?</a>
 
-    <!-- Tunz.ai Branding -->
+<!-- Tunz.ai Branding -->
 <div class="tunz-branding">
     <p>Powered by Tunz.ai</p>
     <img src="{{ url_for('static', filename='static/enhanced_tunz_logo_only.png') }}" alt="Tunz.ai Logo">
@@ -59,6 +69,36 @@
             alert(data.msg);
         }
     });
+
+    // Show password strength message when typing in the password field
+    const passwordInput = document.getElementById('password');
+    const passwordStrengthMessage = document.getElementById('password-strength-message');
+
+    passwordInput.addEventListener('input', function() {
+        passwordStrengthMessage.style.display = 'block';
+    });
+
+    // Hide password strength message when leaving the password field
+    passwordInput.addEventListener('blur', function() {
+        passwordStrengthMessage.style.display = 'none';
+    });
 </script>
+
+
+<style>
+    .password-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .password-container input {
+        flex: 1;
+    }
+
+    #password-strength-message {
+        margin-top: 5px;
+        font-size: 0.9rem;
+    }
+</style>
 
 {% endblock %}
