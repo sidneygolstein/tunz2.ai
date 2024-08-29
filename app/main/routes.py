@@ -139,30 +139,19 @@ def home(hr_id):
 @main.route('/create_interview/<int:hr_id>', methods=['GET', 'POST'])
 @jwt_required()
 def create_interview(hr_id):
-    # Handle POST request (form submission)
-    if not get_jwt_identity():
-        return jsonify({"msg": "User is not authenticated."}), 401
     try:
         if request.method == 'POST':
-            data = request.get_json()
-
-            if not data:
-                return jsonify({"msg": "Invalid data. Please provide the required fields in JSON format."}), 400
-
-
-            # Extract fields from JSON data
-            language = data.get('language')
-            position = data.get('position')
-            role = "Sales"  # This is hardcoded as per your original code
-            subrole = data.get('subrole')
-            industry = data.get('industry')
-            duration = int(data.get('duration', 0))  # Default to 0 if duration is not provided
-            situations = data.get('situations', [])  # Get situations, default to an empty list if not provided
-            if not isinstance(situations, list):
-                return jsonify({"msg": "Situations should be a list."}), 400
-
+            # Extract fields from form data
+            language = request.form.get('language')
+            position = request.form.get('position')
+            role = "Sales"  # Hardcoded as per your original code
+            subrole = request.form.get('subrole')
+            industry = request.form.get('industry')
+            duration = int(request.form.get('duration', 0))  # Default to 0 if duration is not provided
+            situations = request.form.getlist('situations')  # Get situations as a list
+            
             if industry == "Other":
-                industry = data.get('other_industry', '').strip()
+                industry = request.form.get('other_industry', '').strip()
                 if not industry:
                     return jsonify({"msg": "Please specify the industry if 'Other' is selected."}), 400
 
@@ -175,7 +164,7 @@ def create_interview(hr_id):
             for situation in situations:
                 default_ponderation = interview_situations.get(role, {}).get(subrole, {}).get(situation, [3, 3, 3, 3, 3])
                 custom_ponderation = [
-                    int(data.get(f'ponderation_{i+1}', default_ponderation[i]))
+                    int(request.form.get(f'ponderation_{i+1}', default_ponderation[i]))
                     for i in range(6)
                 ]
                 custom_ponderation = [1 + (int(custom_ponderation[i]) - 3) * 0.1 for i in range(len(custom_ponderation))]
@@ -204,23 +193,22 @@ def create_interview(hr_id):
             db.session.add(interview_parameter)
             db.session.commit()
 
-            # Return a JSON response indicating success
-            return jsonify({"msg": "Interview created successfully.", "redirect_url": url_for('main.interview_generated', interview_parameter_id=interview_parameter.id, hr_id=hr_id)}), 200
+            # Redirect to the interview generated page
+            return redirect(url_for('main.interview_generated', interview_parameter_id=interview_parameter.id, hr_id=hr_id))
 
         # Handle GET request (render the form)
         else:
-            # Construct the correct file path to the JSON file
             json_path = os.path.join(current_app.root_path, 'interview_situations_v3.json')
 
             with open(json_path) as f:
                 interview_situations = json.load(f)
 
-            # Render the create interview template with the interview situations data
             return render_template('hr/create_interview.html', hr_id=hr_id, interview_situations=interview_situations)
 
     except Exception as e:
         current_app.logger.error(f"Error in create_interview: {str(e)}")
         return jsonify({"msg": "An error occurred on the server. Please try again."}), 500
+
     
 
 @main.route('/interview_generated/<int:hr_id>/<int:interview_parameter_id>', methods=['GET', 'POST'])

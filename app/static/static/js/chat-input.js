@@ -208,29 +208,36 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 // ANTI FRAUD STRATEGIES: 
-let focusLossCount = 0;  // Initialize a counter for focus losses
-let suppressBlurAlert = false;  // Flag to suppress the blur alert
 
-// Detecting paste attempts
-textarea.addEventListener('paste', function(event) {
-    event.preventDefault();
-    suppressBlurAlert = true;  // Suppress the blur alert
-    alert("Unfortunately, pasting is disabled during this interview.");
-    suppressBlurAlert = false;  // Reset the flag after the alert
-});
+document.addEventListener("DOMContentLoaded", function() {
+    const textarea = document.getElementById("chat-textarea");
+    const form = document.getElementById("chat-form");
+    const sendButton = document.getElementById("send-button");
+    const chatBox = document.getElementById("chat-box");
+    let questionTimestamp;
 
-// Detecting right-click (context menu) attempts
+    // Disable pasting
+    textarea.addEventListener('paste', function(event) {
+        event.preventDefault();
+        alert("Unfortunatelly, pasting is disabled during this interview");
+    });
+
+
+
+// Disable right click
+
 document.addEventListener('contextmenu', function(event) {
     event.preventDefault();
-    suppressBlurAlert = true;  // Suppress the blur alert
-    alert("Unfortunately, right-click is disabled during this interview.");
-    suppressBlurAlert = false;  // Reset the flag after the alert
+    alert("Unfortunatelly, right click is disabled during this interview.");
 });
 
 // Detecting window switch
 window.addEventListener('blur', function() {
-    if (!suppressBlurAlert) {  // Only show the blur alert if not suppressed
-        focusLossCount++;  // Increment the focus loss counter
-        alert("Leaving the chat window is not allowed during this interview.");
-    }
+    alert("Leaving the chat window is not allowed during this interview.");
+});
+
+
+
+
+
 });
