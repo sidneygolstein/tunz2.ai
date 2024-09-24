@@ -24,67 +24,81 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Form submission triggered by clicking the send button
+
+    // Form submission logic
     form.addEventListener("submit", function(event) {
         event.preventDefault();
 
-        // Get the user's answer from the textarea
+        // Stop the current audio if any
+        window.stopCurrentAudio();
+
         const userAnswer = textarea.value;
-
-        // Display the user's answer in the chat box
         displayMessage(userAnswer, 'user');
-
-        // Disable the send button to prevent multiple submissions
         disableSendButton();
-
-        // Show "Typing..." indicator while waiting for the assistant's response
         displayTypingIndicator();
 
-        // Prepare the form data for submission
         const formData = new FormData(form);
-
-        // Clear the textarea and set the placeholder after successful submission
         textarea.value = '';
         textarea.style.height = 'auto';
         textarea.placeholder = "Please enter your answer";
 
-        // Submit the form via fetch to avoid a full page reload
+        // Fetch the response
         fetch(form.action, {
             method: 'POST',
             body: formData
-        }).then(response => {
-            if (response.ok) {
-                return response.text();
-            } else {
-                throw new Error("Failed to send message.");
-            }
-        }).then(html => {
-
-            // Parse the response HTML and extract the last assistant question
+        }).then(response => response.text())
+        .then(html => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
             const lastQuestionElement = doc.querySelectorAll("#chat-box .message.assistant p");
 
             if (lastQuestionElement && lastQuestionElement.length > 0) {
                 const newQuestion = lastQuestionElement[lastQuestionElement.length - 1].innerHTML;
-
-                // Replace the "Typing..." indicator with the assistant's response
                 replaceTypingIndicator(newQuestion);
-
-                // Re-enable the send button
                 enableSendButton();
 
-                // Sort messages by timestamp
-                sortMessagesByTimestamp();
+                // Get the latest question ID
+                const latestAssistantContainer = doc.querySelectorAll('.assistant-container:last-of-type')[0];
+                const latestQuestionId = latestAssistantContainer.getAttribute('data-question-id');
+                
+
+                // Reconstruct the audio file path
+                const audioFilePath = latestAssistantContainer.getAttribute('data-file-path');
+                console.log(`Reconstructed audio file path: ${audioFilePath}`);
+
+                console.log(`Detected latestQuestionId: ${latestQuestionId}`);
+                console.log(`Detected audiFilePath: ${audioFilePath}`);
+
+                // Directly play the audio using the file path
+                createAndPlayAudio(audioFilePath);
             } else {
-                console.error("No new question received.");
+                console.error("chat-input: No new question received.");
                 enableSendButton();
             }
-        }).catch(error => {
-            console.error("Failed to send message:", error);
+        })
+        .catch(error => {
+            console.error("chat-input: Failed to send message:", error);
             enableSendButton();
         });
     });
+
+
+    // Function to dynamically create and play the audio
+    function createAndPlayAudio(audioFilePath) {
+        const audioElement = new Audio(audioFilePath);  // Create a new audio element
+        audioElement.addEventListener('loadedmetadata', () => {
+            console.log(`Audio metadata loaded for: ${audioFilePath}`);
+            window.playNewAudio(audioElement);  // Call the global playNewAudio function
+        });
+    }
+
+    
+
+
+
+
+
+
 
     function sortMessagesByTimestamp() {
         const messageContainers = Array.from(chatBox.querySelectorAll('.message-container'));
@@ -231,13 +245,10 @@ document.addEventListener('contextmenu', function(event) {
     alert("Unfortunatelly, right click is disabled during this interview.");
 });
 
+/*
 // Detecting window switch
 window.addEventListener('blur', function() {
     alert("Leaving the chat window is not allowed during this interview.");
 });
-
-
-
-
-
+ */
 });

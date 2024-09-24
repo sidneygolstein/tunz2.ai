@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="{{ url_for('static', filename='static/js/chat.js') }}"></script>
     <script src="{{ url_for('static', filename='static/js/chat-input.js') }}"></script>
+    <script src="{{ url_for('static', filename='static/js/chat-audio.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='static/styles_chat.css') }}">
 </head>
 <body>
@@ -50,12 +51,19 @@
                 <!-- Chat Content -->
                 <div id="chat-box">
                     {% for question in questions %}
-                    <div class="message-container assistant-container">
+                    <div class="message-container assistant-container" data-question-id="{{ question.id }}" data-timestamp="{{ timestamp }}" data-session-id="{{ question.session_id }}"  data-file-path="{{ url_for('static', filename=question.audio_file_path) }}" >
                         <img src="{{ url_for('static', filename='static/andy.png') }}" alt="Andy" class="message-icon">
                         <div class="message assistant">
                             <p>{{ question.content | replace('\n', '<br>') | safe }}</p>
+                            {% if question.audio_file_path %}
+                            <!-- Automatically play the assistant's response audio -->
+                            <audio id="assistant-audio-{{ question.id }}" autoplay>
+                                <source src="/static/{{ question.audio_file_path }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            {% endif %}
                         </div>
-                    </div>
+                    </div>                                     
                     {% for answer in answers %}
                     {% if answer.question_id == question.id %}
                     <div class="message-container user-container">

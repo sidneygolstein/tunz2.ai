@@ -3,6 +3,7 @@
 import json
 import math
 import os
+import time
 from flask import render_template, request, redirect, url_for, jsonify, session, current_app, flash
 from .. import db, mail
 from ..models import Interview, InterviewParameter, Session, Question, Answer, Result, HR, Applicant, Company, Review, ReviewQuestion, Thread 
@@ -13,6 +14,9 @@ from flask import Blueprint
 from datetime import datetime
 from flask_mail import Message
 from helpers import get_url, get_color
+from ..TTS_utils import generate_voice
+
+
 
 
 main = Blueprint('main', __name__)
@@ -36,6 +40,7 @@ def get_interview_conversation(session_id):
             conversation.append({'role': 'A', 'content': answers[i].content})
 
     return conversation
+
 
 
 
@@ -156,7 +161,7 @@ def create_interview(hr_id):
                     return jsonify({"msg": "Please specify the industry if 'Other' is selected."}), 400
 
             # Load the JSON file to get the ponderation
-            json_path = os.path.join(current_app.root_path, 'interview_situations_v3.json')
+            json_path = os.path.join(current_app.root_path, 'interview_situations_v4.json')
             with open(json_path) as f:
                 interview_situations = json.load(f)
 
@@ -198,7 +203,7 @@ def create_interview(hr_id):
 
         # Handle GET request (render the form)
         else:
-            json_path = os.path.join(current_app.root_path, 'interview_situations_v3.json')
+            json_path = os.path.join(current_app.root_path, 'interview_situations_v4.json')
 
             with open(json_path) as f:
                 interview_situations = json.load(f)
@@ -338,7 +343,7 @@ def comparison_details(hr_id, interview_id):
 ####################################################################################################################################################################################
 ############################################################ APPLICANT #############################################################################################################
 ####################################################################################################################################################################################
-
+'''
 @main.route('/applicant_home/<int:hr_id>/<int:interview_parameter_id>', methods=['GET', 'POST'])
 def applicant_home(hr_id, interview_parameter_id):
     hr = HR.query.get_or_404(hr_id)
@@ -384,12 +389,85 @@ def applicant_home(hr_id, interview_parameter_id):
         duration=duration,
         company_name = company_name,
         error_message=error_message  # Pass the error message to the template
+    )'''
+
+
+
+@main.route('/applicant_home/<int:hr_id>/<int:interview_parameter_id>', methods=['GET', 'POST'])
+def applicant_home(hr_id, interview_parameter_id):
+    hr = HR.query.get_or_404(hr_id)
+    interview_parameter = InterviewParameter.query.get_or_404(interview_parameter_id)
+    interview_id = interview_parameter.interview_id
+    interview = Interview.query.get_or_404(interview_id)
+    duration = interview_parameter.duration
+    company = Company.query.get_or_404(hr.company_id)
+    company_name = company.name
+    
+    error_message = None
+
+    if request.method == 'POST':
+        # Fetch form data directly from POST
+        name = request.form.get('name')
+        surname = request.form.get('surname')
+        email = request.form.get('email')
+
+        # Server-side validation
+        if not name or not surname or not email:
+            error_message = "All fields are required."
+            return render_template(
+                'applicant/applicant_home.html', 
+                interview_parameter_id=interview_parameter_id,
+                interview = interview, 
+                hr_id = hr_id,
+                role=interview_parameter.role,
+                subrole = interview_parameter.subrole, 
+                industry=interview_parameter.industry, 
+                hr_email=hr.email,
+                duration=duration,
+                company_name = company_name,
+                error_message=error_message
+            )
+
+        # Create a new applicant
+        new_applicant = Applicant(name=name, surname=surname, email_address=email)
+        db.session.add(new_applicant)
+        db.session.commit()
+
+        # Redirect directly to start_chat
+        return redirect(url_for('main.start_chat', hr_id=hr_id, interview_parameter_id=interview_parameter_id, interview_id=interview_id, applicant_id=new_applicant.id))
+    
+    return render_template(
+        'applicant/applicant_home.html', 
+        interview_parameter_id=interview_parameter_id,
+        interview = interview, 
+        hr_id = hr_id,
+        role=interview_parameter.role,
+        subrole = interview_parameter.subrole, 
+        industry=interview_parameter.industry, 
+        hr_email=hr.email,
+        duration=duration,
+        company_name = company_name,
+        error_message=error_message  # Pass the error message to the template
     )
+
 
 
 
 @main.route('/start/<int:hr_id>/<int:interview_parameter_id>/<int:interview_id>/<int:applicant_id>', methods=['GET', 'POST'])
 def start_chat(hr_id, interview_parameter_id, interview_id, applicant_id):
+    # Retrieve existing session for the applicant to prevent creating duplicate sessions
+    existing_session = Session.query.filter_by(applicant_id=applicant_id, interview_parameter_id=interview_parameter_id).first()
+
+    # If a session exists, redirect to the existing session's chat
+    if existing_session:
+        return redirect(url_for('main.chat', 
+                                hr_id=hr_id, 
+                                interview_id=interview_id, 
+                                interview_parameter_id=interview_parameter_id, 
+                                session_id=existing_session.id, 
+                                applicant_name=existing_session.applicant.name, 
+                                applicant_id=existing_session.applicant_id))
+    
     # Retrieve data
     interview_parameter = InterviewParameter.query.get_or_404(interview_parameter_id)
     applicant = Applicant.query.get_or_404(applicant_id)
@@ -418,13 +496,25 @@ def start_chat(hr_id, interview_parameter_id, interview_id, applicant_id):
                         thread_id = thread_id, 
                         assistant_id = assistant_id,
                         finished=False)
+    
     db.session.add(new_session)
     db.session.commit()
+
+    # Generate the voice for the assistant response using AWS Polly
     
+    audio_file_path = generate_voice(assistant_response, f'assistant_response_{new_session.id}_{int(time.time())}.mp3')
+
+    print(f"Audio file path generated: {audio_file_path}")
+
     # Create and save the question
-    question = Question(content=assistant_response, session_id=new_session.id)
+    question = Question(
+        content=assistant_response, 
+        session_id=new_session.id,
+        audio_file_path=audio_file_path  # Save the audio file path
+    )
     db.session.add(question)
     db.session.commit()
+
 
     return redirect(url_for('main.chat', 
                             hr_id=hr_id, 
@@ -459,6 +549,7 @@ def chat(hr_id, interview_id, interview_parameter_id, session_id, applicant_id):
 
     max_questions = interview_parameter.max_questions
     thank_you_message = get_thank_you_message(applicant.name)
+    timestamp = int(time.time())
 
     # If POST
     if request.method == 'POST':
@@ -495,7 +586,16 @@ def chat(hr_id, interview_id, interview_parameter_id, session_id, applicant_id):
 
         else:
             assistant_response = get_openai_thread_response(thread_id, assistant_id, user_input)
-            question = Question(content=assistant_response, session_id=session_id)
+            # Generate the voice for the assistant response
+            audio_file_path = generate_voice(assistant_response, f'assistant_response_{session_id}_{timestamp}.mp3')
+            print(f"Audio file path generated: {audio_file_path}")
+            
+            # Save the new question and its associated audio file path
+            question = Question(
+                content=assistant_response, 
+                session_id=session_id,
+                audio_file_path=audio_file_path
+            )
             db.session.add(question)
             db.session.commit()
 
@@ -528,9 +628,8 @@ def chat(hr_id, interview_id, interview_parameter_id, session_id, applicant_id):
                            interview_id=interview_id,
                            interview_parameter_id=interview_parameter_id,
                            applicant_id=applicant_id,
-                           applicant = applicant)
-
-
+                           applicant = applicant,
+                           timestamp = timestamp)
 
 
 

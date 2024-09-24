@@ -30,6 +30,7 @@ class Config:
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+    ELEVENLABS_API_KEY = os.getenv('ELEVENLABS_API_KEY')
     from datetime import timedelta
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)  # Set token expiration time
     #JWT_TOKEN_LOCATION = ["cookies"]

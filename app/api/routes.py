@@ -81,7 +81,8 @@ def get_questions():
         'id': question.id,
         'content': question.content,
         'timestamp': question.timestamp,
-        'session_id': question.session_id
+        'session_id': question.session_id,
+        'audio_file_path': question.audio_file_path  # Add the audio file path to the response
     } for question in questions])
 
 
