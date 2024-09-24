@@ -15,17 +15,35 @@ polly_client = boto3.client('polly',
                             aws_access_key_id=AWS_ACCESS_KEY_ID,
                             aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
                             region_name=AWS_REGION)
-def generate_voice(text, filename, voice_id='Joanna'):
+def generate_voice(text, language, filename):
     """
     Generate speech using AWS Polly and save it as an MP3 file.
     
     :param text: The text to convert to speech.
     :param filename: The name of the file where the speech should be saved.
-    :param voice_id: The Polly voice ID to use (default is 'Joanna').
+    :param language: The language of the interview
     :return: The path to the generated audio file (relative to the static directory).
     """
+    
+    # Define the voice ID mapping based on the language
+    language_to_voice_id = {
+        "English": "Matthew",
+        "French": "Mathieu",
+        "Spanish": "Miguel",
+        "Dutch": "Ruben",
+        "Italian": "Giorgio"
+    }
+    
+    # Get the voice ID for the given language, default to English if not found
+    voice_id = language_to_voice_id.get(language, "Matthew")
+    
+    # Wrap the text in SSML to adjust the speed
+    ssml_text = f'<speak><prosody rate="102%">{text}</prosody></speak>'
+    
+    # Generate the audio using AWS Polly
     response = polly_client.synthesize_speech(
-        Text=text,
+        TextType='ssml',  # Specify that we're using SSML
+        Text=ssml_text,
         OutputFormat='mp3',
         VoiceId=voice_id
     )

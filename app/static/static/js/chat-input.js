@@ -245,10 +245,10 @@ document.addEventListener('contextmenu', function(event) {
     alert("Unfortunatelly, right click is disabled during this interview.");
 });
 
-/*
+
 // Detecting window switch
 window.addEventListener('blur', function() {
     alert("Leaving the chat window is not allowed during this interview.");
 });
- */
+ 
 });

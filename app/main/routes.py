@@ -502,7 +502,7 @@ def start_chat(hr_id, interview_parameter_id, interview_id, applicant_id):
 
     # Generate the voice for the assistant response using AWS Polly
     
-    audio_file_path = generate_voice(assistant_response, f'assistant_response_{new_session.id}_{int(time.time())}.mp3')
+    audio_file_path = generate_voice(assistant_response, interview_parameter.language, f'assistant_response_{new_session.id}_{int(time.time())}.mp3')
 
     print(f"Audio file path generated: {audio_file_path}")
 
@@ -587,7 +587,7 @@ def chat(hr_id, interview_id, interview_parameter_id, session_id, applicant_id):
         else:
             assistant_response = get_openai_thread_response(thread_id, assistant_id, user_input)
             # Generate the voice for the assistant response
-            audio_file_path = generate_voice(assistant_response, f'assistant_response_{session_id}_{timestamp}.mp3')
+            audio_file_path = generate_voice(assistant_response, interview_parameter.language, f'assistant_response_{session_id}_{timestamp}.mp3')
             print(f"Audio file path generated: {audio_file_path}")
             
             # Save the new question and its associated audio file path
