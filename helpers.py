@@ -23,7 +23,7 @@ def get_color(mean_score):
     try:
         mean_score = float(mean_score)  # Ensure mean_score is a float
     except ValueError:
-        mean_score = 0.0  # Default to 0 if conversion fails yo
+        mean_score = 0.0  # Default to 0 if conversion fails 
 
     normalized_score = mean_score / 10.0
 
