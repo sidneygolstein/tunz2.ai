@@ -1,5 +1,3 @@
-.env
-.venv
 .vscode
 __pycache__/
 chat.db
@@ -8,3 +6,4 @@ chat.db
 static/audio
 allfiles.txt
 *.log
+*.md
