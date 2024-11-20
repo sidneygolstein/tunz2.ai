@@ -8,3 +8,4 @@ chat.db
 static/audio
 allfiles.txt
 *.log
+.env
