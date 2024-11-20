@@ -221,6 +221,59 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+
+//////////////////////////////////////////////////////
+// VOICE RECORDING FOR STT CAPABILITIES
+//////////////////////////////////////////////////////
+
+let mediaRecorder;
+let recordedChunks = [];
+const recordButton = document.getElementById('record-button');
+
+// Toggle recording
+recordButton.addEventListener('click', function () {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        recordButton.classList.remove('recording');
+    } else {
+        startRecording();
+        recordButton.classList.add('recording');
+    }
+});
+
+function startRecording() {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(function (stream) {
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = function (event) {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = function () {
+                const audioBlob = new Blob(recordedChunks, { type: 'audio/mp3' });
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'user_audio.mp3');
+                sendAudioForTranscription(formData);
+            };
+
+            mediaRecorder.start();
+        });
+}
+
+function sendAudioForTranscription(formData) {
+    fetch('/transcribe-audio', {
+        method: 'POST',
+        body: formData
+    }).then(response => response.json())
+      .then(data => {
+          const transcription = data.transcription;
+          document.getElementById('chat-textarea').value = transcription;
+      }).catch(error => console.error('Error during transcription:', error));
+}
+
+
 // ANTI FRAUD STRATEGIES: 
 
 document.addEventListener("DOMContentLoaded", function() {

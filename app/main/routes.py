@@ -15,6 +15,8 @@ from datetime import datetime
 from flask_mail import Message
 from helpers import get_url, get_color
 from ..TTS_utils import generate_voice
+from ..STT_utils import get_transcription_result
+import boto3
 
 
 
@@ -42,6 +44,32 @@ def get_interview_conversation(session_id):
     return conversation
 
 
+def upload_audio_to_s3(file_path):
+    s3 = boto3.client('s3')
+    bucket_name = 'votre-nom-de-bucket'
+    object_name = file_path.split('/')[-1]
+    s3.upload_file(file_path, bucket_name, object_name)
+    return f's3://{bucket_name}/{object_name}'
+
+
+@main.route('/transcribe-audio', methods=['POST'])
+def transcribe_audio():
+    # Save the uploaded audio file
+    audio_file = request.files['audio']
+    file_path = os.path.join('path/to/save/audio', audio_file.filename)
+    audio_file.save(file_path)
+
+    # Upload audio file to S3 and get the URI
+    s3_uri = upload_audio_to_s3(file_path)
+
+    # Use AWS Transcribe to get transcription
+    job_name = f"transcription_{int(time.time())}"
+    transcribe_audio(s3_uri, job_name)
+
+    # Poll AWS Transcribe until job completes and get the transcription result
+    transcription_text = get_transcription_result(job_name)
+
+    return jsonify({'transcription': transcription_text})
 
 
 
@@ -343,53 +371,7 @@ def comparison_details(hr_id, interview_id):
 ####################################################################################################################################################################################
 ############################################################ APPLICANT #############################################################################################################
 ####################################################################################################################################################################################
-'''
-@main.route('/applicant_home/<int:hr_id>/<int:interview_parameter_id>', methods=['GET', 'POST'])
-def applicant_home(hr_id, interview_parameter_id):
-    hr = HR.query.get_or_404(hr_id)
-    interview_parameter = InterviewParameter.query.get_or_404(interview_parameter_id)
-    interview_id = interview_parameter.interview_id
-    interview = Interview.query.get_or_404(interview_id)
-    duration = interview_parameter.duration
-    company = Company.query.get_or_404(hr.company_id)
-    company_name = company.name
-    
-    error_message = None
 
-    if request.method == 'POST':
-        data = request.get_json()  # Fetch JSON data from the request
-        if data is None:
-            return jsonify({"msg": "Invalid input, JSON data required"}), 400
-        
-        name = data.get('name')
-        surname = data.get('surname')
-        email = data.get('email')
-
-        # Server-side validation
-        if not name or not surname or not email:
-            return jsonify({"msg": "All fields are required."}), 400
-
-        new_applicant = Applicant(name=name, surname=surname, email_address=email)
-        db.session.add(new_applicant)
-        db.session.commit()
-
-        return jsonify({
-            "redirect_url": url_for('main.start_chat', hr_id=hr_id, interview_parameter_id=interview_parameter_id, interview_id=interview_id, applicant_id=new_applicant.id)
-        }), 200
-    
-    return render_template(
-        'applicant/applicant_home.html', 
-        interview_parameter_id=interview_parameter_id,
-        interview = interview, 
-        hr_id = hr_id,
-        role=interview_parameter.role,
-        subrole = interview_parameter.subrole, 
-        industry=interview_parameter.industry, 
-        hr_email=hr.email,
-        duration=duration,
-        company_name = company_name,
-        error_message=error_message  # Pass the error message to the template
-    )'''
 
 
 
